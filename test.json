@@ -1,0 +1,329 @@
+{
+  "settings": {
+    "TrackerID": "TW25742909",
+    "budgetShow": true,
+    "budgetAmount": 14000,
+    "isFirstLaunch": false,
+    "budgetStartDate": 1
+  },
+  "tables": [
+    {
+      "tableName": "expense",
+      "columnsCount": 7,
+      "rowCounts": 1312,
+      "columnNames": [
+        "_id",
+        "amount",
+        "date",
+        "descr",
+        "account_id",
+        "category_id",
+        "routine_id"
+      ],
+      "items": [
+        {
+          "_id": "1",
+          "amount": "170",
+          "date": "2017-12-06",
+          "descr": "摩斯",
+          "account_id": "1",
+          "category_id": "2",
+          "routine_id": "0"
+        },
+        {
+          "_id": "2",
+          "amount": "480",
+          "date": "2017-12-06",
+          "descr": "壽喜燒",
+          "account_id": "1",
+          "category_id": "3",
+          "routine_id": "0"
+        },
+        {
+          "_id": "3",
+          "amount": "560",
+          "date": "2017-12-06",
+          "descr": "高鐵來回",
+          "account_id": "1",
+          "category_id": "6",
+          "routine_id": "0"
+        },
+        {
+          "_id": "4",
+          "amount": "230",
+          "date": "2018-03-05",
+          "descr": "[黑豹]",
+          "account_id": "1",
+          "category_id": "8",
+          "routine_id": "0"
+        },
+        {
+          "_id": "5",
+          "amount": "330",
+          "date": "2018-03-05",
+          "descr": "續日-科契爾、肉醬可頌",
+          "account_id": "1",
+          "category_id": "2",
+          "routine_id": "0"
+        },
+        {
+          "_id": "6",
+          "amount": "28",
+          "date": "2018-03-05",
+          "descr": "阿華甜",
+          "account_id": "1",
+          "category_id": "4",
+          "routine_id": "0"
+        },
+        {
+          "_id": "7",
+          "amount": "100",
+          "date": "2018-03-05",
+          "descr": "剪髮",
+          "account_id": "1",
+          "category_id": "20",
+          "routine_id": "0"
+        }
+      ]
+    },
+    {
+      "tableName": "category",
+      "columnsCount": 6,
+      "rowCounts": 28,
+      "columnNames": [
+        "_id",
+        "name",
+        "icon",
+        "category_order",
+        "default_name",
+        "behavior"
+      ],
+      "items": [
+        {
+          "_id": "1",
+          "name": "type100",
+          "icon": "bread",
+          "category_order": "0",
+          "default_name": "type100",
+          "behavior": "expense"
+        },
+        {
+          "_id": "2",
+          "name": "type101",
+          "icon": "lunch",
+          "category_order": "1",
+          "default_name": "type101",
+          "behavior": "expense"
+        },
+        {
+          "_id": "3",
+          "name": "type102",
+          "icon": "dinner",
+          "category_order": "2",
+          "default_name": "type102",
+          "behavior": "expense"
+        },
+        {
+          "_id": "4",
+          "name": "type103",
+          "icon": "drink",
+          "category_order": "3",
+          "default_name": "type103",
+          "behavior": "expense"
+        },
+        {
+          "_id": "5",
+          "name": "type104",
+          "icon": "candy",
+          "category_order": "4",
+          "default_name": "type104",
+          "behavior": "expense"
+        },
+        {
+          "_id": "6",
+          "name": "type105",
+          "icon": "traffic",
+          "category_order": "5",
+          "default_name": "type105",
+          "behavior": "expense"
+        },
+        {
+          "_id": "7",
+          "name": "type106",
+          "icon": "grocery",
+          "category_order": "6",
+          "default_name": "type106",
+          "behavior": "expense"
+        },
+        {
+          "_id": "8",
+          "name": "type107",
+          "icon": "entertainment",
+          "category_order": "7",
+          "default_name": "type107",
+          "behavior": "expense"
+        },
+        {
+          "_id": "9",
+          "name": "type108",
+          "icon": "social",
+          "category_order": "8",
+          "default_name": "type108",
+          "behavior": "expense"
+        },
+        {
+          "_id": "10",
+          "name": "type109",
+          "icon": "cloth",
+          "category_order": "9",
+          "default_name": "type109",
+          "behavior": "expense"
+        },
+        {
+          "_id": "11",
+          "name": "type110",
+          "icon": "shopping",
+          "category_order": "10",
+          "default_name": "type110",
+          "behavior": "expense"
+        },
+        {
+          "_id": "12",
+          "name": "type111",
+          "icon": "rent",
+          "category_order": "11",
+          "default_name": "type111",
+          "behavior": "expense"
+        },
+        {
+          "_id": "13",
+          "name": "type112",
+          "icon": "gift",
+          "category_order": "12",
+          "default_name": "type112",
+          "behavior": "expense"
+        },
+        {
+          "_id": "14",
+          "name": "type113",
+          "icon": "red_envelope",
+          "category_order": "13",
+          "default_name": "type113",
+          "behavior": "expense"
+        },
+        {
+          "_id": "15",
+          "name": "type114",
+          "icon": "hospital",
+          "category_order": "14",
+          "default_name": "type114",
+          "behavior": "expense"
+        },
+        {
+          "_id": "16",
+          "name": "type115",
+          "icon": "phone",
+          "category_order": "15",
+          "default_name": "type115",
+          "behavior": "expense"
+        },
+        {
+          "_id": "17",
+          "name": "type116",
+          "icon": "stock",
+          "category_order": "16",
+          "default_name": "type116",
+          "behavior": "expense"
+        },
+        {
+          "_id": "18",
+          "name": "type117",
+          "icon": "visa",
+          "category_order": "17",
+          "default_name": "type117",
+          "behavior": "expense"
+        },
+        {
+          "_id": "19",
+          "name": "type118",
+          "icon": "transfer",
+          "category_order": "18",
+          "default_name": "type118",
+          "behavior": "expense"
+        },
+        {
+          "_id": "20",
+          "name": "剪髮",
+          "icon": "social",
+          "category_order": "19",
+          "default_name": "type119",
+          "behavior": "expense"
+        },
+        {
+          "_id": "21",
+          "name": "type200",
+          "icon": "salary",
+          "category_order": "0",
+          "default_name": "type200",
+          "behavior": "income"
+        },
+        {
+          "_id": "22",
+          "name": "type201",
+          "icon": "bonus",
+          "category_order": "1",
+          "default_name": "type201",
+          "behavior": "income"
+        },
+        {
+          "_id": "23",
+          "name": "type202",
+          "icon": "allowances",
+          "category_order": "2",
+          "default_name": "type202",
+          "behavior": "income"
+        },
+        {
+          "_id": "24",
+          "name": "type203",
+          "icon": "stock",
+          "category_order": "3",
+          "default_name": "type203",
+          "behavior": "income"
+        },
+        {
+          "_id": "25",
+          "name": "type204",
+          "icon": "other",
+          "category_order": "4",
+          "default_name": "type204",
+          "behavior": "income"
+        },
+        {
+          "_id": "27",
+          "name": "宵夜",
+          "icon": "dinner",
+          "category_order": "21",
+          "default_name": "宵夜",
+          "behavior": "expense"
+        },
+        {
+          "_id": "28",
+          "name": "食物",
+          "icon": "meat",
+          "category_order": "22",
+          "default_name": "食物",
+          "behavior": "expense"
+        },
+        {
+          "_id": "29",
+          "name": "生活\/學習",
+          "icon": "coffee",
+          "category_order": "22",
+          "default_name": "生活\/學習",
+          "behavior": "expense"
+        }
+      ]
+    }
+  ]
+}
