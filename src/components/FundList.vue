@@ -14,23 +14,29 @@
           class="subtitle-one-line"
         >
           <v-list-item-group active-class="pink--text">
-            <FundListItem
-              v-for="cost in costList"
-              :key="cost._id"
-              :cost="cost"
-            />
-            <v-divider></v-divider>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon></v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>共計</v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-list-item-action-text class="subtitle-2 pr-1">{{ costSum }}</v-list-item-action-text>
-              </v-list-item-action>
-            </v-list-item>
+            <template v-if="costList.length">
+              <FundListItem
+                v-for="(cost, index) in costList"
+                :key="index"
+                :cost="cost"
+                :id="index"
+              />
+              <v-divider></v-divider>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>共計</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-list-item-action-text class="subtitle-2 pr-1">{{ costSum }}</v-list-item-action-text>
+                </v-list-item-action>
+              </v-list-item>
+            </template>
+            <template v-else>
+              目前暫無消費資料
+            </template>
           </v-list-item-group>
         </v-list>
       </v-container>
@@ -46,20 +52,16 @@
       FundListItem
     },
     data() {
-      return {
-        dialog: false
-      };
+      return {};
     },
     computed: {
       costList() {
-        return this.$store.state.costList;
+        return this.$store.getters["getNowCostTable"];
       },
       costSum() {
+        if (!this.costList.length) return;
         return this.costList.map(cost => cost.amount).reduce((a, b) => a + b);
       }
-    },
-    methods: {
-      deleteHandler() {}
     }
   };
 </script>

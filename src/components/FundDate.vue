@@ -32,9 +32,18 @@
   export default {
     data() {
       return {
-        modal: false,
-        date: new Date().toISOString().substr(0, 10)
+        modal: false
       };
+    },
+    computed: {
+      date: {
+        get() {
+          return this.$store.getters["getDate"];
+        },
+        set(val) {
+          this.$store.commit("SET_DATE", val);
+        }
+      }
     }
   };
 </script>

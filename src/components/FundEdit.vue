@@ -42,13 +42,14 @@
         <v-btn
           text
           color="primary"
-          @click="addHandler"
+          @click="editHandler"
         >
           確認
         </v-btn>
         <v-btn
           text
           color="error"
+          @click="closeHandler"
         >
           取消
         </v-btn>
@@ -63,29 +64,27 @@
       mode: {
         type: String,
         required: true
+      },
+      target: {
+        type: Object,
+        required: true
+      },
+      id: {
+        type: Number,
+        required: true
       }
     },
     data() {
       return {
         modal: false,
-        amount: null,
-        descr: "",
-        category_id: 1,
+        amount: this.target.amount,
+        descr: this.target.descr,
+        category_id: this.target.category_id,
         modeList: [
-          {
-            mode: "addCost",
-            title: "新增支出",
-            placeholder: "消費描述..."
-          },
           {
             mode: "editCost",
             title: "修改支出",
             placeholder: "消費描述..."
-          },
-          {
-            mode: "addIncome",
-            title: "新增收入",
-            placeholder: "收入描述..."
           },
           {
             mode: "editIncome",
@@ -110,13 +109,17 @@
       categoryHandler(id) {
         this.category_id = id;
       },
-      addHandler() {
+      editHandler() {
         let obj = {
           amount: this.amount,
           descr: this.descr,
           category_id: this.category_id
         };
-        this.$store.commit("ADD_COST", obj);
+        this.$store.commit("EDIT_COST", { id: this.id, obj: obj });
+        this.$emit("closeHandler");
+      },
+      closeHandler() {
+        this.$emit("closeHandler");
       }
     }
   };
