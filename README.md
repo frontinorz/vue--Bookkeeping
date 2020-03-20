@@ -1,4 +1,4 @@
-# vue_practice
+# vue-Bookkeeping
 
 ## Project setup
 ```
