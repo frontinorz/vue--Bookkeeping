@@ -6,7 +6,7 @@
   >
     <v-card>
       <v-card-title class="blue darken-1">
-        <span class="white--text">支出明細</span>
+        <span class="white--text">{{ modeText.title }}</span>
       </v-card-title>
       <v-container>
         <v-list
@@ -14,13 +14,27 @@
           class="subtitle-one-line"
         >
           <v-list-item-group active-class="pink--text">
-            <template v-if="costList.length">
+            <template v-if="itemList.length">
               <FundListItem
-                v-for="(cost, index) in costList"
+                v-for="(cost, index) in itemList"
                 :key="index"
                 :cost="cost"
-                :id="index"
-              />
+              >
+                <template>
+                  <v-btn
+                    icon
+                    @click="editDialogTrigger(index, cost)"
+                  >
+                    <v-icon color="grey lighten-1">mdi-pencil-outline</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    @click="deleteDialogTrigger(index)"
+                  >
+                    <v-icon color="grey lighten-1">mdi-trash-can-outline</v-icon>
+                  </v-btn>
+                </template>
+              </FundListItem>
               <v-divider></v-divider>
               <v-list-item>
                 <v-list-item-icon>
@@ -30,37 +44,106 @@
                   <v-list-item-title>共計</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-list-item-action-text class="subtitle-2 pr-1">{{ costSum }}</v-list-item-action-text>
+                  <v-list-item-action-text class="subtitle-2 pr-1">{{ feeSum }}</v-list-item-action-text>
                 </v-list-item-action>
               </v-list-item>
             </template>
             <template v-else>
-              目前暫無消費資料
+              {{ modeText.textNoItem }}
             </template>
           </v-list-item-group>
         </v-list>
       </v-container>
     </v-card>
+    <v-dialog v-model="dialogEdit">
+      <FundEdit
+        :target="selectedItem"
+        :id="selectedId"
+        @closeHandler="dialogEdit = false"
+      />
+    </v-dialog>
+    <v-dialog
+      v-model="dialogDelete"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">{{ modeText.textDelete }}</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialogDelete = false"
+          >取消</v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteHandler"
+          >確認</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-col>
 </template>
 
 <script>
   import FundListItem from "@/components/FundListItem";
+  import FundEdit from "@/components/FundEdit";
 
   export default {
     components: {
-      FundListItem
+      FundListItem,
+      FundEdit
     },
     data() {
-      return {};
+      return {
+        selectedId: null,
+        selectedItem: {},
+        dialogEdit: false,
+        dialogDelete: false,
+        modeList: [
+          {
+            mode: "expense",
+            title: "消費明細",
+            textNoItem: "目前沒有消費資料!",
+            textDelete: "確定要刪除此筆消費?"
+          },
+          {
+            mode: "income",
+            title: "收入明細",
+            textNoItem: "目前沒有收入資料!",
+            textDelete: "確定要刪除此筆收入?"
+          }
+        ]
+      };
     },
     computed: {
-      costList() {
-        return this.$store.getters["getNowCostTable"];
+      modeText() {
+        return this.modeList.find(
+          item => item.mode === this.$store.state.route.name
+        );
       },
-      costSum() {
-        if (!this.costList.length) return;
-        return this.costList.map(cost => cost.amount).reduce((a, b) => a + b);
+      itemList() {
+        return this.$store.getters["getTargetTable"];
+      },
+      feeSum() {
+        if (!this.itemList.length) return;
+        return this.itemList.map(item => item.amount).reduce((a, b) => a + b);
+      }
+    },
+    methods: {
+      editDialogTrigger(id, item) {
+        this.selectedItem = item;
+        this.selectedId = id;
+        this.dialogEdit = true;
+      },
+      deleteDialogTrigger(id) {
+        this.selectedId = id;
+        this.dialogDelete = true;
+      },
+      deleteHandler() {
+        this.$store.commit("DELETE_ITEM", this.selectedId);
+        this.dialogDelete = false;
       }
     }
   };

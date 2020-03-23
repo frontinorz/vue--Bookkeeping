@@ -59,12 +59,6 @@
 
 <script>
   export default {
-    props: {
-      mode: {
-        type: String,
-        required: true
-      }
-    },
     data() {
       return {
         modal: false,
@@ -73,23 +67,13 @@
         category_id: 1,
         modeList: [
           {
-            mode: "addCost",
+            mode: "expense",
             title: "新增支出",
             placeholder: "消費描述..."
           },
           {
-            mode: "editCost",
-            title: "修改支出",
-            placeholder: "消費描述..."
-          },
-          {
-            mode: "addIncome",
+            mode: "income",
             title: "新增收入",
-            placeholder: "收入描述..."
-          },
-          {
-            mode: "editIncome",
-            title: "修改收入",
             placeholder: "收入描述..."
           }
         ]
@@ -100,10 +84,12 @@
         return this.$store.state.status;
       },
       category() {
-        return this.$store.state.category;
+        return this.$store.getters["getCategoryList"];
       },
       inputMode() {
-        return this.modeList.find(item => item.mode === this.mode);
+        return this.modeList.find(
+          item => item.mode === this.$store.state.route.name
+        );
       }
     },
     methods: {
@@ -116,7 +102,7 @@
           descr: this.descr,
           category_id: this.category_id
         };
-        this.$store.commit("ADD_COST", obj);
+        this.$store.commit("ADD_ITEM", obj);
       }
     }
   };

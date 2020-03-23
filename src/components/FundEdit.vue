@@ -61,10 +61,6 @@
 <script>
   export default {
     props: {
-      mode: {
-        type: String,
-        required: true
-      },
       target: {
         type: Object,
         required: true
@@ -82,12 +78,12 @@
         category_id: this.target.category_id,
         modeList: [
           {
-            mode: "editCost",
+            mode: "expense",
             title: "修改支出",
             placeholder: "消費描述..."
           },
           {
-            mode: "editIncome",
+            mode: "income",
             title: "修改收入",
             placeholder: "收入描述..."
           }
@@ -99,10 +95,12 @@
         return this.$store.state.status;
       },
       category() {
-        return this.$store.state.category;
+        return this.$store.getters["getCategoryList"];
       },
       inputMode() {
-        return this.modeList.find(item => item.mode === this.mode);
+        return this.modeList.find(
+          item => item.mode === this.$store.state.route.name
+        );
       }
     },
     methods: {
