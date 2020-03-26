@@ -10,23 +10,23 @@
           v-model="item"
           color="primary"
         >
-          <v-list-item>
+          <v-list-item to="/expense">
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
-                <router-link to="/expense">支出</router-link>
+                支出
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item>
+          <v-list-item to="/income">
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
-                <router-link to="/income">收入</router-link>
+                收入
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -52,6 +52,14 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>分析</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-contacts</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>設定</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -116,5 +124,11 @@
 <style lang="scss">
   #app {
     font-family: "Roboto", sans-serif, "微軟正黑體";
+  }
+  a {
+    text-decoration: none;
+  }
+  .v-application .v-list-item__title a {
+    color: inherit;
   }
 </style>

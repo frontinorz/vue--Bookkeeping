@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="blue darken-1">
+    <v-card-title :class="colorTheme">
       <span class="white--text">{{ inputMode.title }}</span>
     </v-card-title>
     <v-container>
@@ -80,9 +80,6 @@
       };
     },
     computed: {
-      status() {
-        return this.$store.state.status;
-      },
       category() {
         return this.$store.getters["getCategoryList"];
       },
@@ -90,6 +87,9 @@
         return this.modeList.find(
           item => item.mode === this.$store.state.route.name
         );
+      },
+      colorTheme() {
+        return this.$store.getters["getColorTheme"];
       }
     },
     methods: {

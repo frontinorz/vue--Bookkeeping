@@ -1,11 +1,7 @@
 <template>
-  <v-col
-    cols="6"
-    sm="12"
-    md="6"
-  >
+  <div>
     <v-card>
-      <v-card-title class="blue darken-1">
+      <v-card-title :class="colorTheme">
         <span class="white--text">{{ modeText.title }}</span>
       </v-card-title>
       <v-container>
@@ -13,8 +9,8 @@
           three-line
           class="subtitle-one-line"
         >
-          <v-list-item-group active-class="pink--text">
-            <template v-if="itemList.length">
+          <template v-if="itemList.length">
+            <v-list-item-group active-class="pink--text">
               <FundListItem
                 v-for="(cost, index) in itemList"
                 :key="index"
@@ -36,22 +32,22 @@
                 </template>
               </FundListItem>
               <v-divider></v-divider>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon></v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>共計</v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-list-item-action-text class="subtitle-2 pr-1">{{ feeSum }}</v-list-item-action-text>
-                </v-list-item-action>
-              </v-list-item>
-            </template>
-            <template v-else>
-              {{ modeText.textNoItem }}
-            </template>
-          </v-list-item-group>
+            </v-list-item-group>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon></v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>共計</v-list-item-title>
+              </v-list-item-content>
+              <v-list-item-action class="align-self-center">
+                <v-list-item-action-text class="subtitle-2 pr-1">{{ feeSum }}</v-list-item-action-text>
+              </v-list-item-action>
+            </v-list-item>
+          </template>
+          <template v-else>
+            {{ modeText.textNoItem }}
+          </template>
         </v-list>
       </v-container>
     </v-card>
@@ -83,12 +79,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-col>
+  </div>
 </template>
 
 <script>
-  import FundListItem from "@/components/FundListItem";
-  import FundEdit from "@/components/FundEdit";
+  import FundListItem from "@/components/Fund/FundListItem";
+  import FundEdit from "@/components/Fund/FundEdit";
 
   export default {
     components: {
@@ -118,6 +114,12 @@
       };
     },
     computed: {
+      mode() {
+        return this.$store.state.route.name;
+      },
+      colorTheme() {
+        return this.$store.getters["getColorTheme"];
+      },
       modeText() {
         return this.modeList.find(
           item => item.mode === this.$store.state.route.name

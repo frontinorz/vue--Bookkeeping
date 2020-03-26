@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    status: 'expense',
     currentDate: new Date().toISOString().substr(0, 10),
     currentTable: {},
+    budget: 15000,
     categoryExpense: [
       {
         _id: 1,
@@ -111,26 +111,59 @@ export default new Vuex.Store({
     ],
   },
   getters: {
-    getCategoryList(state) {
+    getCategoryList: (state) => {
       if (state.route.name === "expense") {
-        return state.categoryExpense;
+        return state.categoryExpense
       }
       if (state.route.name === "income") {
-        return state.categoryIncome;
+        return state.categoryIncome
       }
     },
     getCategoryItem: (state, getters) => (id) => {
-      return getters.getCategoryList.find(item => item._id == id);
-    },
-    getTargetTable: (state) => {
-      if (state.route.name === "expense") {
-        return state.currentTable.expenseTable;
-      }
-      if (state.route.name === "income") {
-        return state.currentTable.incomeTable;
-      }
+      return getters.getCategoryList.find(item => item._id == id)
     },
 
+    getTargetTable: (state) => {
+      if (state.route.name === "expense") {
+        return state.currentTable.expenseTable
+      }
+      if (state.route.name === "income") {
+        return state.currentTable.incomeTable
+      }
+    },
+    getMonthExpense: (state) => {
+      const monthTable = state.table.filter(item => {
+        return item.date.substr(0, 7) === state.currentDate.substr(0, 7)
+      })
+      const expenseTable = [].concat(...monthTable.map(item => item.expenseTable))
+
+      return expenseTable.reduce((total, current) => { return total + current.amount }, 0)
+    },
+    getMonthIncome: (state) => {
+      const monthTable = state.table.filter(item => {
+        return item.date.substr(0, 7) === state.currentDate.substr(0, 7)
+      })
+      const incomeTable = [].concat(...monthTable.map(item => item.incomeTable))
+
+      return incomeTable.reduce((total, current) => { return total + current.amount }, 0)
+    },
+
+    getColorTheme: (state) => {
+      if (state.route.name === "expense") {
+        return "red lighten-1";
+      }
+      else if (state.route.name === "income") {
+        return "teal lighten-1";
+      }
+      else {
+        return "blue";
+      }
+
+    },
+
+    getBudget(state) {
+      return state.budget
+    },
     getDate(state) {
       return state.currentDate
     }
@@ -150,6 +183,10 @@ export default new Vuex.Store({
         })
         state.currentTable = state.table.find(item => item.date == state.currentDate)
       }
+    },
+    CONTROL_DATE(state, dir) {
+      let current = new Date(state.currentDate) + dir
+      state.currentDate = current.toISOString().substr(0, 10)
     },
 
     ADD_ITEM(state, item) {
