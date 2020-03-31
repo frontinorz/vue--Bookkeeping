@@ -28,11 +28,10 @@
           v-model.number="amount"
         />
       </v-col>
-
       <v-col cols="12">
         <v-textarea
           :placeholder="inputMode.placeholder"
-          rows="3"
+          rows="1"
           prepend-icon="comment"
           v-model="descr"
         ></v-textarea>
@@ -113,7 +112,7 @@
           descr: this.descr,
           category_id: this.category_id
         };
-        this.$store.commit("EDIT_COST", { id: this.id, obj: obj });
+        this.$store.commit("EDIT_ITEM", { id: this.id, obj: obj });
         this.$emit("closeHandler");
       },
       closeHandler() {

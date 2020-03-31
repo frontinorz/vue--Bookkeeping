@@ -109,6 +109,27 @@ export default new Vuex.Store({
         ]
       }
     ],
+    tableRoutine: [
+      {
+        expenseTable: [
+          {
+            date: '2020-03-14',
+            amount: 7000,
+            descr: "房租",
+            category_id: 1,
+            routine: 'monthly'
+          }
+        ],
+        incomeTable: [
+          {
+            date: '2020-03-01',
+            amount: 45000,
+            descr: "薪水",
+            category_id: 1
+          }
+        ]
+      }
+    ]
   },
   getters: {
     getCategoryList: (state) => {
@@ -182,19 +203,35 @@ export default new Vuex.Store({
           incomeTable: []
         })
         state.currentTable = state.table.find(item => item.date == state.currentDate)
+        // if routine table has data , push to table
       }
     },
     CONTROL_DATE(state, dir) {
-      let current = new Date(state.currentDate) + dir
-      state.currentDate = current.toISOString().substr(0, 10)
+      let current = new Date(state.currentDate)
+      current.setDate(current.getDate() + dir)
+
+      current = current.toISOString().substr(0, 10)
+
+      console.log(current);
+      this.commit('SET_DATE', current)
     },
 
     ADD_ITEM(state, item) {
-      if (state.route.name === "expense") {
-        state.currentTable.expenseTable.push(item)
-      }
-      if (state.route.name === "income") {
-        state.currentTable.incomeTable.push(item)
+      if (item.routine) {
+        item.date = state.currentDate
+        if (state.route.name === "expense") {
+          state.tableRoutine.expenseTable.push(item)
+        }
+        if (state.route.name === "income") {
+          state.tableRoutine.incomeTable.push(item)
+        }
+      } else {
+        if (state.route.name === "expense") {
+          state.currentTable.expenseTable.push(item)
+        }
+        if (state.route.name === "income") {
+          state.currentTable.incomeTable.push(item)
+        }
       }
     },
     DELETE_ITEM(state, id) {
@@ -205,7 +242,7 @@ export default new Vuex.Store({
         state.currentTable.incomeTable.splice(id, 1)
       }
     },
-    EDIT_COST(state, payload) {
+    EDIT_ITEM(state, payload) {
       let target;
       if (state.route.name === "expense") {
         target = state.currentTable.expenseTable[payload.id]

@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-title :class="colorTheme">
-        <span class="white--text">{{ modeText.title }}</span>
+        <span class="white--text">{{ isRoutine ? modeText.titleRoutine : modeText.title }}</span>
       </v-card-title>
       <v-container>
         <v-list
@@ -51,7 +51,10 @@
         </v-list>
       </v-container>
     </v-card>
-    <v-dialog v-model="dialogEdit">
+    <v-dialog
+      v-model="dialogEdit"
+      max-width="450"
+    >
       <FundEdit
         :target="selectedItem"
         :id="selectedId"
@@ -87,6 +90,12 @@
   import FundEdit from "@/components/Fund/FundEdit";
 
   export default {
+    props: {
+      isRoutine: {
+        type: Boolean,
+        default: false
+      }
+    },
     components: {
       FundListItem,
       FundEdit
@@ -100,13 +109,15 @@
         modeList: [
           {
             mode: "expense",
-            title: "消費明細",
-            textNoItem: "目前沒有消費資料!",
-            textDelete: "確定要刪除此筆消費?"
+            title: "支出明細",
+            titleRoutine: "固定支出",
+            textNoItem: "目前沒有支出資料!",
+            textDelete: "確定要刪除此筆支出?"
           },
           {
             mode: "income",
             title: "收入明細",
+            titleRoutine: "固定收入",
             textNoItem: "目前沒有收入資料!",
             textDelete: "確定要刪除此筆收入?"
           }

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Fund from '@/views/Fund'
+import Calender from '@/views/Calender'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,10 @@ const routes = [
   //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   // }
   {
+    path: '/',
+    redirect: '/expense'
+  },
+  {
     path: '/expense',
     name: 'expense',
     component: Fund
@@ -28,6 +33,11 @@ const routes = [
     path: '/income',
     name: 'income',
     component: Fund
+  },
+  {
+    path: '/calender',
+    name: 'calender',
+    component: Calender
   }
 ]
 

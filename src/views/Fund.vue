@@ -19,6 +19,12 @@
       >
         <FundList />
       </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <!-- <FundList :isRoutine="true" /> -->
+      </v-col>
     </v-row>
     <FundFoot />
   </v-container>
@@ -36,6 +42,11 @@
       FundInput,
       FundList,
       FundFoot
+    },
+    mounted() {
+      if (this.$route.params.date) {
+        this.$store.commit("SET_DATE", this.$route.params.date);
+      }
     },
     data: () => ({}),
     beforeCreate() {

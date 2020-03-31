@@ -26,16 +26,28 @@
           prepend-icon="mdi-currency-usd"
           placeholder="0"
           v-model.number="amount"
+          dense
         />
       </v-col>
-
       <v-col cols="12">
         <v-textarea
           :placeholder="inputMode.placeholder"
-          rows="3"
+          rows="1"
           prepend-icon="comment"
           v-model="descr"
+          dense
         ></v-textarea>
+      </v-col>
+      <v-col cols="12">
+        <v-select
+          v-model="routine"
+          :items="routineList"
+          label="Select"
+          hide-details
+          prepend-icon="refresh"
+          single-line
+          dense
+        ></v-select>
       </v-col>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -65,6 +77,7 @@
         amount: null,
         descr: "",
         category_id: 1,
+        routine: { text: "無", value: 0 },
         modeList: [
           {
             mode: "expense",
@@ -76,6 +89,12 @@
             title: "新增收入",
             placeholder: "收入描述..."
           }
+        ],
+        routineList: [
+          { text: "無", value: 0 },
+          { text: "每日", value: "daily" },
+          { text: "每周", value: "weekly" },
+          { text: "每月", value: "monthly" }
         ]
       };
     },
@@ -102,6 +121,11 @@
           descr: this.descr,
           category_id: this.category_id
         };
+
+        // if routine, add to tableRoutine
+        // if (this.routine !== 0) {
+        //   obj.routine = this.routine;
+        // }
         this.$store.commit("ADD_ITEM", obj);
       }
     }
