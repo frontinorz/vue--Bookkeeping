@@ -1,19 +1,23 @@
 <template>
   <v-card>
-    <v-card-title :class="colorTheme">
+    <v-card-title
+      class="px-4 py-2"
+      :class="colorTheme"
+    >
       <span class="white--text">{{ inputMode.title }}</span>
     </v-card-title>
     <v-container>
       <v-col cols="12">
         <v-chip-group
-          active-class="deep-purple accent-4 white--text"
+          mandatory
+          active-class="blue accent-4 white--text"
           column
+          v-model=category_id
         >
           <v-chip
             class="mr-2"
             v-for="item in category"
             :key="item._id"
-            @click="categoryHandler(item._id)"
           >
             <v-icon>{{ item.icon }}</v-icon>
             <span>{{ item.title }}</span>
@@ -38,16 +42,15 @@
           dense
         ></v-textarea>
       </v-col>
-      <v-col cols="12">
-        <v-select
-          v-model="routine"
-          :items="routineList"
-          label="Select"
-          hide-details
-          prepend-icon="refresh"
-          single-line
-          dense
-        ></v-select>
+      <v-col
+        cols="12"
+        v-if="mode === 'expense'"
+      >
+        <v-checkbox
+          class="mt-0"
+          v-model="isSpecial"
+          label="特別支出(不納入預算)"
+        ></v-checkbox>
       </v-col>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -73,11 +76,11 @@
   export default {
     data() {
       return {
-        modal: false,
         amount: null,
         descr: "",
-        category_id: 1,
-        routine: { text: "無", value: 0 },
+        category_id: 0,
+        isSpecial: false,
+        modal: false,
         modeList: [
           {
             mode: "expense",
@@ -89,16 +92,13 @@
             title: "新增收入",
             placeholder: "收入描述..."
           }
-        ],
-        routineList: [
-          { text: "無", value: 0 },
-          { text: "每日", value: "daily" },
-          { text: "每周", value: "weekly" },
-          { text: "每月", value: "monthly" }
         ]
       };
     },
     computed: {
+      mode() {
+        return this.$store.state.route.name;
+      },
       category() {
         return this.$store.getters["getCategoryList"];
       },
@@ -115,18 +115,30 @@
       categoryHandler(id) {
         this.category_id = id;
       },
+      clearInput() {
+        this.category_id = 0;
+        this.amount = null;
+        this.descr = "";
+        this.isSpecial = false;
+      },
       addHandler() {
         let obj = {
           amount: this.amount,
           descr: this.descr,
           category_id: this.category_id
         };
-
-        // if routine, add to tableRoutine
-        // if (this.routine !== 0) {
-        //   obj.routine = this.routine;
-        // }
-        this.$store.commit("ADD_ITEM", obj);
+        if (this.mode === "expense") {
+          if (this.isSpecial) {
+            obj.isSpecial = true;
+            this.$store.commit("ADD_SPECIAL", obj);
+          } else {
+            this.$store.commit("ADD_EXPENSE", obj);
+          }
+        }
+        if (this.mode === "income") {
+          this.$store.commit("ADD_INCOME", obj);
+        }
+        this.clearInput();
       }
     }
   };

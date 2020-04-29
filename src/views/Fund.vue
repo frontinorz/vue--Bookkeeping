@@ -17,13 +17,18 @@
         cols="12"
         md="6"
       >
-        <FundList />
+        <FundList :itemList=itemTable />
       </v-col>
+      <!-- if there is special expense -->
       <v-col
         cols="12"
         md="6"
+        v-if="mode === 'expense' && itemTableSpecial.length"
       >
-        <!-- <FundList :isRoutine="true" /> -->
+        <FundList
+          :itemList=itemTableSpecial
+          :title="'特別支出'"
+        />
       </v-col>
     </v-row>
     <FundFoot />
@@ -43,14 +48,25 @@
       FundList,
       FundFoot
     },
+    beforeCreate() {
+      this.$store.commit("ADD_DATE");
+    },
     mounted() {
       if (this.$route.params.date) {
         this.$store.commit("SET_DATE", this.$route.params.date);
       }
     },
-    data: () => ({}),
-    beforeCreate() {
-      this.$store.commit("ADD_DATE");
-    }
+    computed: {
+      mode() {
+        return this.$store.state.route.name;
+      },
+      itemTable() {
+        return this.$store.getters["getTargetTable"](this.mode);
+      },
+      itemTableSpecial() {
+        return this.$store.getters["getSpecialList"];
+      }
+    },
+    data: () => ({})
   };
 </script>

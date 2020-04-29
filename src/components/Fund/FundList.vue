@@ -1,8 +1,11 @@
 <template>
   <div>
     <v-card>
-      <v-card-title :class="colorTheme">
-        <span class="white--text">{{ isRoutine ? modeText.titleRoutine : modeText.title }}</span>
+      <v-card-title
+        class="px-4 py-2"
+        :class="colorTheme"
+      >
+        <span class="white--text">{{ title? title : modeText.title }}</span>
       </v-card-title>
       <v-container>
         <v-list
@@ -25,7 +28,7 @@
                   </v-btn>
                   <v-btn
                     icon
-                    @click="deleteDialogTrigger(index)"
+                    @click="deleteDialogTrigger(index, cost)"
                   >
                     <v-icon color="grey lighten-1">mdi-trash-can-outline</v-icon>
                   </v-btn>
@@ -33,8 +36,8 @@
               </FundListItem>
               <v-divider></v-divider>
             </v-list-item-group>
-            <v-list-item>
-              <v-list-item-icon>
+            <v-list-item style="min-height:60px;">
+              <v-list-item-icon class="my-0">
                 <v-icon></v-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -58,6 +61,7 @@
       <FundEdit
         :target="selectedItem"
         :id="selectedId"
+        ref="editRef"
         @closeHandler="dialogEdit = false"
       />
     </v-dialog>
@@ -91,9 +95,11 @@
 
   export default {
     props: {
-      isRoutine: {
-        type: Boolean,
-        default: false
+      itemList: {
+        type: Array
+      },
+      title: {
+        type: String
       }
     },
     components: {
@@ -136,9 +142,6 @@
           item => item.mode === this.$store.state.route.name
         );
       },
-      itemList() {
-        return this.$store.getters["getTargetTable"];
-      },
       feeSum() {
         if (!this.itemList.length) return;
         return this.itemList.map(item => item.amount).reduce((a, b) => a + b);
@@ -150,12 +153,23 @@
         this.selectedId = id;
         this.dialogEdit = true;
       },
-      deleteDialogTrigger(id) {
+      deleteDialogTrigger(id, item) {
+        this.selectedItem = item;
         this.selectedId = id;
         this.dialogDelete = true;
       },
       deleteHandler() {
-        this.$store.commit("DELETE_ITEM", this.selectedId);
+        if (this.mode === "expense") {
+          console.log(this.selectedItem);
+          if (this.selectedItem.isSpecial) {
+            this.$store.commit("DELETE_SPECIAL", this.selectedId);
+          } else {
+            this.$store.commit("DELETE_EXPENSE", this.selectedId);
+          }
+        }
+        if (this.mode === "income") {
+          this.$store.commit("DELETE_INCOME", this.selectedId);
+        }
         this.dialogDelete = false;
       }
     }

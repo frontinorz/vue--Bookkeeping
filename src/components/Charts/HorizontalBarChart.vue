@@ -1,7 +1,7 @@
 <template>
   <chart
     :options="options"
-    :theme="theme"
+    :style="style"
   />
 </template>
 
@@ -25,72 +25,86 @@
       },
       barWidth: {
         type: Number,
-        default: 15
+        default: 25
       },
       seriesData: {
-        type: Object,
+        type: Array,
         default() {
-          return {
-            xAxisData: [],
-            data: []
-          };
+          return [
+            [91852, "Orange Juice"],
+            [101852, "Lemon Juice"],
+            [20112, "Monkey"]
+          ];
         }
-      }
-    },
-    computed: {
-      options() {
-        return {
-          dataset: {
-            source: [
-              ["amount", "product"],
-              [58212, "Matcha Latte"],
-              [78254, "Milk Tea"],
-              [41032, "Cheese Cocoa"],
-              [12755, "Cheese Brownie"],
-              [20145, "Matcha Cocoa"],
-              [79146, "Tea"],
-              [91852, "Orange Juice"],
-              [101852, "Lemon Juice"],
-              [20112, "Monkey"]
-            ]
-          },
-          grid: { containLabel: true },
-          xAxis: { name: "amount" },
-          yAxis: { type: "category" },
-          series: [
-            {
-              type: "bar",
-              encode: {
-                // Map the "amount" column to X axis.
-                x: "amount",
-                // Map the "product" column to Y axis
-                y: "product"
-              }
-            }
-          ],
-          color: [
-            "#dd6b66",
-            "#759aa0",
-            "#e69d87",
-            "#8dc1a9",
-            "#ea7e53",
-            "#eedd78",
-            "#73a373",
-            "#73b9bc",
-            "#7289ab",
-            "#91ca8c",
-            "#f49f42"
-          ]
-        };
       }
     },
     data() {
       return {
-        // style: {
-        //   height: this.height + "%",
-        //   width: "100%"
-        // }
+        style: {
+          height: "100%",
+          width: "100%"
+        }
       };
+    },
+    computed: {
+      options() {
+        return {
+          grid: { containLabel: true },
+          tooltip: {},
+          xAxis: { type: "value" },
+          yAxis: {
+            type: "category",
+            data: this.seriesData.map(item => {
+              return item[1];
+            })
+          },
+          series: [
+            {
+              type: "bar",
+              z: 3,
+              label: {
+                normal: {
+                  position: "right",
+                  show: true
+                }
+              },
+              data: this.seriesData.map(item => {
+                return item[0];
+              }),
+              barWidth: this.barWidth,
+              itemStyle: {
+                normal: {
+                  color: function(params) {
+                    // build a color map as your need.
+                    var colorList = [
+                      "#C1232B",
+                      "#B5C334",
+                      "#FCCE10",
+                      "#E87C25",
+                      "#27727B",
+                      "#FE8463",
+                      "#9BCA63",
+                      "#FAD860",
+                      "#F3A43B",
+                      "#60C0DD",
+                      "#D7504B",
+                      "#C6E579",
+                      "#F4E001",
+                      "#F0805A",
+                      "#26C0C0"
+                    ];
+                    return colorList[params.dataIndex];
+                  }
+                }
+              }
+            }
+          ],
+          color: ["#006699", "#4cabce"]
+        };
+      }
+      // dataRanking(){
+
+      // }
     }
   };
 </script>

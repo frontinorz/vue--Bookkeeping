@@ -90,6 +90,9 @@
       };
     },
     computed: {
+      mode() {
+        return this.$store.state.route.name;
+      },
       category() {
         return this.$store.getters["getCategoryList"];
       },
@@ -112,11 +115,34 @@
           descr: this.descr,
           category_id: this.category_id
         };
-        this.$store.commit("EDIT_ITEM", { id: this.id, obj: obj });
+        if (this.mode === "expense") {
+          if (this.target.isSpecial) {
+            this.$store.commit("EDIT_SPECIAL", { id: this.id, obj: obj });
+          } else {
+            this.$store.commit("EDIT_EXPENSE", { id: this.id, obj: obj });
+          }
+        }
+        if (this.mode === "income") {
+          this.$store.commit("EDIT_INCOME", { id: this.id, obj: obj });
+        }
         this.$emit("closeHandler");
       },
       closeHandler() {
         this.$emit("closeHandler");
+      },
+      refreshSelection() {
+        this.amount = this.target.amount;
+        this.descr = this.target.descr;
+        this.category_id = this.target.category_id;
+      }
+    },
+    watch: {
+      target: function(newVal, oldVal) {
+        // watch it
+        this.amount = newVal.amount;
+        this.descr = newVal.descr;
+        this.category_id = newVal.category_id;
+        console.log("Prop changed: ", newVal, " | was: ", oldVal);
       }
     }
   };

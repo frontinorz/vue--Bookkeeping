@@ -10,6 +10,7 @@
       tile
     >
       <v-card-title
+        class="py-2 px-4"
         :class="colorTheme"
         v-if="mode === 'expense'"
       >
@@ -37,6 +38,7 @@
         </div>
       </v-card-title>
       <v-card-title
+        class="py-2 px-4"
         :class="colorTheme"
         v-if="mode === 'income'"
       >
@@ -66,13 +68,13 @@
       },
 
       monthExpense() {
-        return this.$store.getters["getMonthExpense"];
+        return this.$store.getters["getMonthExpenseTotal"];
+      },
+      monthIncome() {
+        return this.$store.getters["getMonthIncomeTotal"];
       },
       monthBudget() {
         return this.$store.getters["getBudget"];
-      },
-      monthIncome() {
-        return this.$store.getters["getMonthIncome"];
       }
     },
     methods: {

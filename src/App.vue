@@ -35,7 +35,15 @@
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>月曆</v-list-item-title>
+              <v-list-item-title>收支月曆</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-contacts</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>年度分析</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -44,14 +52,6 @@
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>資產</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>分析</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>

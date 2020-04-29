@@ -9,7 +9,7 @@
         <pre>{{ cost.descr }}</pre>
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action>
+    <v-list-item-action class="my-1">
       <v-list-item-action-text class="subtitle-2 text-right m-l-auto">{{ cost.amount }}</v-list-item-action-text>
       <v-col class="pa-0">
         <slot>
