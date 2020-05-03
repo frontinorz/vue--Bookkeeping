@@ -48,23 +48,23 @@
       FundList,
       FundFoot
     },
-    beforeCreate() {
-      this.$store.commit("ADD_DATE");
-    },
     mounted() {
-      if (this.$route.params.date) {
-        this.$store.commit("SET_DATE", this.$route.params.date);
-      }
+      this.$store.dispatch("GET_DATA");
+      this.$store.commit("setDate", new Date().toISOString().substr(0, 10));
     },
     computed: {
       mode() {
         return this.$store.state.route.name;
       },
       itemTable() {
-        return this.$store.getters["getTargetTable"](this.mode);
+        if (this.mode === "expense") {
+          return this.$store.getters["getDateTable"](this.mode);
+        } else {
+          return this.$store.getters["getDateTable"](this.mode);
+        }
       },
       itemTableSpecial() {
-        return this.$store.getters["getSpecialList"];
+        return this.$store.getters["getDateTable"]("special");
       }
     },
     data: () => ({})

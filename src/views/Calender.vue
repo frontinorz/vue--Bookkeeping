@@ -299,8 +299,6 @@
         this.start = start;
         this.end = end;
         // Get month data
-
-        // this.$store.commit("SET_DATE", this.start.date);
       },
       fundLink({ nativeEvent, event }) {
         if (event.type === "expense") {

@@ -15,20 +15,20 @@
           <template v-if="itemList.length">
             <v-list-item-group active-class="pink--text">
               <FundListItem
-                v-for="(cost, index) in itemList"
-                :key="index"
-                :cost="cost"
+                v-for="item in itemList"
+                :key="item.id"
+                :item="item"
               >
                 <template>
                   <v-btn
                     icon
-                    @click="editDialogTrigger(index, cost)"
+                    @click="editDialogTrigger(item)"
                   >
                     <v-icon color="grey lighten-1">mdi-pencil-outline</v-icon>
                   </v-btn>
                   <v-btn
                     icon
-                    @click="deleteDialogTrigger(index, cost)"
+                    @click="deleteDialogTrigger(item)"
                   >
                     <v-icon color="grey lighten-1">mdi-trash-can-outline</v-icon>
                   </v-btn>
@@ -148,27 +148,24 @@
       }
     },
     methods: {
-      editDialogTrigger(id, item) {
+      editDialogTrigger(item) {
         this.selectedItem = item;
-        this.selectedId = id;
+        this.selectedId = item.id;
         this.dialogEdit = true;
       },
-      deleteDialogTrigger(id, item) {
+      deleteDialogTrigger(item) {
         this.selectedItem = item;
-        this.selectedId = id;
+        this.selectedId = item.id;
         this.dialogDelete = true;
       },
-      deleteHandler() {
+      async deleteHandler() {
         if (this.mode === "expense") {
-          console.log(this.selectedItem);
-          if (this.selectedItem.isSpecial) {
-            this.$store.commit("DELETE_SPECIAL", this.selectedId);
-          } else {
-            this.$store.commit("DELETE_EXPENSE", this.selectedId);
-          }
+          await this.$store.dispatch("DELETE_EXPENSE", this.selectedId);
+          await this.$store.dispatch("GET_EXPENSE");
         }
         if (this.mode === "income") {
-          this.$store.commit("DELETE_INCOME", this.selectedId);
+          await this.$store.dispatch("DELETE_INCOME", this.selectedId);
+          await this.$store.dispatch("GET_INCOME");
         }
         this.dialogDelete = false;
       }

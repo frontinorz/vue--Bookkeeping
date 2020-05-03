@@ -65,7 +65,7 @@
           return this.$store.getters["getDate"];
         },
         set(val) {
-          this.$store.commit("SET_DATE", val);
+          this.$store.commit("setDate", val);
         }
       },
       colorTheme() {
@@ -74,10 +74,10 @@
     },
     methods: {
       datePrev() {
-        this.$store.commit("CONTROL_DATE", -1);
+        this.$store.commit("controlDate", -1);
       },
       dateNext() {
-        this.$store.commit("CONTROL_DATE", 1);
+        this.$store.commit("controlDate", 1);
       }
     }
   };

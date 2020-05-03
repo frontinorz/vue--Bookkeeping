@@ -1,0 +1,60 @@
+{
+  "settings": {
+    "TrackerID": "TW25742909",
+    "budgetShow": true,
+    "budgetAmount": 14000,
+    "isFirstLaunch": false,
+    "budgetStartDate": 1
+  },
+  "expenseTable": [
+    {
+      "id": 1,
+      "amount": 35,
+      "descr": "蛋餅",
+      "category_id": 1,
+      "date": "2020-05-01",
+      "isSpecial": false
+    },
+    {
+      "id": 2,
+      "amount": 80,
+      "descr": "蛋餅",
+      "category_id": 2,
+      "date": "2020-04-30",
+      "isSpecial": false
+    },
+    {
+      "id": 3,
+      "amount": 8000,
+      "descr": "蛋餅",
+      "category_id": 3,
+      "date": "2020-05-02",
+      "isSpecial": true
+    },
+    {
+      "id": 4,
+      "amount": 80,
+      "descr": "來自db",
+      "category_id": 2,
+      "date": "2020-05-02",
+      "isSpecial": false
+    },
+    {
+      "amount": 50,
+      "descr": "",
+      "category_id": 2,
+      "date": "2020-05-03",
+      "isSpecial": false,
+      "id": 5
+    }
+  ],
+  "incomeTable": [
+    {
+      "id": 1,
+      "amount": 35000,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-02"
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+
+const url = 'http://localhost:3000'
 
 Vue.use(Vuex)
 
@@ -223,27 +226,8 @@ export default new Vuex.Store({
         ]
       }
     ],
-    tableRoutine: [
-      {
-        expenseTable: [
-          {
-            date: '2020-03-14',
-            amount: 7000,
-            descr: "房租",
-            category_id: 1,
-            routine: 'monthly'
-          }
-        ],
-        incomeTable: [
-          {
-            date: '2020-03-01',
-            amount: 45000,
-            descr: "薪水",
-            category_id: 1
-          }
-        ]
-      }
-    ]
+    expenseTable: [],
+    incomeTable: [],
   },
   getters: {
     getCategoryList: (state) => {
@@ -271,35 +255,36 @@ export default new Vuex.Store({
 
     },
 
-    getTargetTable: (state) => (genre) => {
+    getDateTable: (state) => (genre) => {
       if (genre === "expense") {
-        return state.currentTable.expenseTable
+        return state.expenseTable.filter(item =>
+          item.date === state.currentDate
+        ).filter(item => item.isSpecial == false)
+      }
+      if (genre === "special") {
+        return state.expenseTable.filter(item =>
+          item.date === state.currentDate
+        ).filter(item => item.isSpecial == true)
       }
       if (genre === "income") {
-        return state.currentTable.incomeTable
+        return state.incomeTable.filter(item => item.date === state.currentDate)
       }
     },
     getMonthTable: (state) => (genre) => {
-      let monthTable = state.table.filter(item => {
-        return item.date.substr(0, 7) === state.currentDate.substr(0, 7)
-      })
-      let table = []
-
       if (genre === "expense") {
-        table = [].concat(...monthTable.map(item => item.expenseTable))
+        return state.expenseTable.filter(item =>
+          item.date.substr(0, 7) === state.currentDate.substr(0, 7)
+        ).filter(item => item.isSpecial === false)
       }
       if (genre === "special") {
-        monthTable.forEach(item => {
-          if (item.specialTable) {
-            table.push(item.specialTable[0])
-          }
-        })
-        console.log(table)
+        return state.expenseTable.filter(item =>
+          item.date.substr(0, 7) === state.currentDate.substr(0, 7)).filter(item => item.isSpecial == true)
       }
       if (genre === "income") {
-        table = [].concat(...monthTable.map(item => item.incomeTable))
+        return state.incomeTable.filter(item =>
+          item.date.substr(0, 7) === state.currentDate.substr(0, 7)
+        )
       }
-      return table
     },
     getMonthExpenseTotal: (state, getters) => {
       let table = getters.getMonthTable("expense")
@@ -309,7 +294,6 @@ export default new Vuex.Store({
     },
     getMonthSpecialTotal: (state, getters) => {
       let table = getters.getMonthTable("special")
-      // console.log(table)
       return table.reduce((total, current) => {
         return total + current.amount
       }, 0)
@@ -317,10 +301,6 @@ export default new Vuex.Store({
     getMonthIncomeTotal: (state, getters) => {
       let table = getters.getMonthTable("income")
       return table.reduce((total, current) => { return total + current.amount }, 0)
-    },
-
-    getSpecialList(state) {
-      return state.currentTable.specialTable ? state.currentTable.specialTable : []
     },
 
     getBudget(state) {
@@ -331,103 +311,88 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    SET_DATE(state, date) {
+    setData(state, data) {
+      state.expenseTable = data.expenseTable
+      state.incomeTable = data.incomeTable
+    },
+    setDate(state, date) {
       state.currentDate = date
-      state.currentTable = state.table.find(item => item.date == state.currentDate)
-      this.commit('ADD_DATE')
+      let dateTable = state.table.find(item => item.date == state.currentDate)
+      if (dateTable) {
+        state.currentTable = dateTable
+      } else {
+        state.currentTable = {
+          date: state.currentDate,
+        }
+        state.table.push(state.currentTable)
+      }
 
     },
-    ADD_DATE(state) {
-      if (!state.currentTable) {
-        state.table.push({
-          date: state.currentDate,
-          expenseTable: [],
-          incomeTable: []
-        })
-      }
-      state.currentTable = state.table.find(item => item.date == state.currentDate)
-    },
-    CONTROL_DATE(state, dir) {
+    controlDate(state, dir) {
       let current = new Date(state.currentDate)
       current.setDate(current.getDate() + dir)
 
       current = current.toISOString().substr(0, 10)
 
-      this.commit('SET_DATE', current)
+      this.commit('setDate', current)
     },
 
-    ADD_ITEM(state, item) {
-      if (state.route.name === "expense") {
-        state.currentTable.expenseTable.push(item)
-      }
-      if (state.route.name === "income") {
-        state.currentTable.incomeTable.push(item)
-      }
-    },
-    DELETE_ITEM(state, id) {
-      if (state.route.name === "expense") {
-        state.currentTable.expenseTable.splice(id, 1)
-      }
-      if (state.route.name === "income") {
-        state.currentTable.incomeTable.splice(id, 1)
-      }
-    },
-    EDIT_ITEM(state, payload) {
-      let target;
-      if (state.route.name === "expense") {
-        target = state.currentTable.expenseTable[payload.id]
-      }
-      if (state.route.name === "income") {
-        target = state.currentTable.incomeTable[payload.id]
-      }
-      target.amount = payload.obj.amount
-      target.descr = payload.obj.descr
-      target.category_id = payload.obj.category_id
-    },
     // Expense handler
-    ADD_EXPENSE(state, item) {
-      state.currentTable.expenseTable.push(item)
-    },
-    DELETE_EXPENSE(state, id) {
-      state.currentTable.expenseTable.splice(id, 1)
+    setExpense(state, table) {
+      state.expenseTable = table
     },
     EDIT_EXPENSE(state, payload) {
-      let target = state.currentTable.expenseTable[payload.id]
+      let target = state.expenseTable[payload.id]
       target.amount = payload.obj.amount
       target.descr = payload.obj.descr
       target.category_id = payload.obj.category_id
     },
-    // Special handler
-    ADD_SPECIAL(state, item) {
-      if (!state.currentTable.specialTable) {
-        state.currentTable.specialTable = []
-      }
-      state.currentTable.specialTable.push(item)
-    },
-    DELETE_SPECIAL(state, id) {
-      state.currentTable.specialTable.splice(id, 1)
-    },
-    EDIT_SPECIAL(state, payload) {
-      let target = state.currentTable.specialTable[payload.id]
-      target.amount = payload.obj.amount
-      target.descr = payload.obj.descr
-      target.category_id = payload.obj.category_id
-    },
+
     // Income handler
-    ADD_INCOME(state, item) {
-      state.currentTable.incomeTable.push(item)
-    },
-    DELETE_INCOME(state, id) {
-      state.currentTable.incomeTable.splice(id, 1)
+    setIncome(state, table) {
+      state.incomeTable = table
     },
     EDIT_INCOME(state, payload) {
-      let target = state.currentTable.incomeTable[payload.id]
+      let target = state.incomeTable[payload.id]
       target.amount = payload.obj.amount
       target.descr = payload.obj.descr
       target.category_id = payload.obj.category_id
     },
   },
   actions: {
+    GET_DATA({ commit }) {
+      axios.get(url + '/db').then((res) => {
+        commit('setData', res.data)
+      });
+    },
+    // Expense handler
+    GET_EXPENSE({ commit }) {
+      axios.get(url + '/expenseTable').then((res) => {
+        commit('setExpense', res.data)
+        console.log('GET')
+      });
+    },
+    CREATE_EXPENSE(context, item) {
+      axios.post(url + '/expenseTable', item).then(() => { });
+    },
+    DELETE_EXPENSE(context, id) {
+      axios.delete(url + '/expenseTable/' + id).then(() => { });
+    },
+    UPDATE_EXPENSE() {
+
+    },
+    // Income handler
+    GET_INCOME({ commit }) {
+      axios.get(url + '/incomeTable').then((res) => {
+        commit('setIncome', res.data)
+      });
+    },
+    CREATE_INCOME(context, item) {
+      axios.post(url + '/incomeTable', item).then(() => { });
+    },
+    DELETE_INCOME(context, id) {
+      axios.delete(url + '/incomeTable/' + id).then(() => { });
+    },
   },
   modules: {
   }

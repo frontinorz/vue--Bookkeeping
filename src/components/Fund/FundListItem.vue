@@ -6,11 +6,11 @@
     <v-list-item-content>
       <v-list-item-title>{{ category.title }}</v-list-item-title>
       <v-list-item-subtitle>
-        <pre>{{ cost.descr }}</pre>
+        <pre>{{ item.descr }}</pre>
       </v-list-item-subtitle>
     </v-list-item-content>
     <v-list-item-action class="my-1">
-      <v-list-item-action-text class="subtitle-2 text-right m-l-auto">{{ cost.amount }}</v-list-item-action-text>
+      <v-list-item-action-text class="subtitle-2 text-right m-l-auto">{{ item.amount }}</v-list-item-action-text>
       <v-col class="pa-0">
         <slot>
         </slot>
@@ -22,7 +22,7 @@
 <script>
   export default {
     props: {
-      cost: {
+      item: {
         type: Object,
         required: true
       }
@@ -32,7 +32,7 @@
     },
     computed: {
       category() {
-        return this.$store.getters["getCategoryItem"](this.cost.category_id);
+        return this.$store.getters["getCategoryItem"](this.item.category_id);
       }
     }
   };

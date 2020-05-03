@@ -116,11 +116,7 @@
           category_id: this.category_id
         };
         if (this.mode === "expense") {
-          if (this.target.isSpecial) {
-            this.$store.commit("EDIT_SPECIAL", { id: this.id, obj: obj });
-          } else {
-            this.$store.commit("EDIT_EXPENSE", { id: this.id, obj: obj });
-          }
+          this.$store.commit("EDIT_EXPENSE", { id: this.id, obj: obj });
         }
         if (this.mode === "income") {
           this.$store.commit("EDIT_INCOME", { id: this.id, obj: obj });

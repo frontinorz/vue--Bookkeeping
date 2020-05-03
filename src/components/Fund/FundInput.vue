@@ -81,6 +81,7 @@
         category_id: 0,
         isSpecial: false,
         modal: false,
+        isLoading: false,
         modeList: [
           {
             mode: "expense",
@@ -121,23 +122,25 @@
         this.descr = "";
         this.isSpecial = false;
       },
-      addHandler() {
+      async addHandler() {
         let obj = {
           amount: this.amount,
           descr: this.descr,
-          category_id: this.category_id
+          category_id: this.category_id,
+          date: this.$store.getters["getDate"]
         };
+        this.isLoading = true;
+
         if (this.mode === "expense") {
-          if (this.isSpecial) {
-            obj.isSpecial = true;
-            this.$store.commit("ADD_SPECIAL", obj);
-          } else {
-            this.$store.commit("ADD_EXPENSE", obj);
-          }
+          obj.isSpecial = this.isSpecial;
+          await this.$store.dispatch("CREATE_EXPENSE", obj);
+          await this.$store.dispatch("GET_EXPENSE");
         }
         if (this.mode === "income") {
-          this.$store.commit("ADD_INCOME", obj);
+          await this.$store.dispatch("CREATE_INCOME", obj);
+          await this.$store.dispatch("GET_INCOME");
         }
+        this.isLoading = false;
         this.clearInput();
       }
     }
