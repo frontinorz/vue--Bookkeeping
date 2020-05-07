@@ -160,12 +160,12 @@
       },
       async deleteHandler() {
         if (this.mode === "expense") {
-          await this.$store.dispatch("DELETE_EXPENSE", this.selectedId);
-          await this.$store.dispatch("GET_EXPENSE");
+          await this.$store.dispatch("DELETE_EXPENSE", this.selectedItem);
+          // await this.$store.dispatch("GET_EXPENSE");
         }
         if (this.mode === "income") {
-          await this.$store.dispatch("DELETE_INCOME", this.selectedId);
-          await this.$store.dispatch("GET_INCOME");
+          await this.$store.dispatch("DELETE_INCOME", this.selectedItem);
+          // await this.$store.dispatch("GET_INCOME");
         }
         this.dialogDelete = false;
       }

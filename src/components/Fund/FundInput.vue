@@ -123,6 +123,8 @@
         this.isSpecial = false;
       },
       async addHandler() {
+        if (!this.category_id || !this.amount) return;
+
         let obj = {
           amount: this.amount,
           descr: this.descr,
@@ -134,11 +136,9 @@
         if (this.mode === "expense") {
           obj.isSpecial = this.isSpecial;
           await this.$store.dispatch("CREATE_EXPENSE", obj);
-          await this.$store.dispatch("GET_EXPENSE");
         }
         if (this.mode === "income") {
           await this.$store.dispatch("CREATE_INCOME", obj);
-          await this.$store.dispatch("GET_INCOME");
         }
         this.isLoading = false;
         this.clearInput();

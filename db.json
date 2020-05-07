@@ -24,14 +24,6 @@
       "isSpecial": false
     },
     {
-      "id": 3,
-      "amount": 8000,
-      "descr": "蛋餅",
-      "category_id": 3,
-      "date": "2020-05-02",
-      "isSpecial": true
-    },
-    {
       "id": 4,
       "amount": 80,
       "descr": "來自db",
@@ -40,12 +32,44 @@
       "isSpecial": false
     },
     {
-      "amount": 50,
-      "descr": "",
-      "category_id": 2,
+      "amount": 601,
+      "descr": "吐司\n高麗菜\n牛奶",
+      "category_id": 4,
       "date": "2020-05-03",
       "isSpecial": false,
       "id": 5
+    },
+    {
+      "amount": 50,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-04",
+      "isSpecial": false,
+      "id": 6
+    },
+    {
+      "amount": 50,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-06",
+      "isSpecial": false,
+      "id": 7
+    },
+    {
+      "amount": 80000,
+      "descr": "777",
+      "category_id": 4,
+      "date": "2020-05-07",
+      "isSpecial": true,
+      "id": 8
+    },
+    {
+      "amount": 5000,
+      "descr": "好吃吃",
+      "category_id": 3,
+      "date": "2020-05-07",
+      "isSpecial": false,
+      "id": 9
     }
   ],
   "incomeTable": [
@@ -55,6 +79,27 @@
       "descr": "",
       "category_id": 1,
       "date": "2020-05-02"
+    },
+    {
+      "amount": 500,
+      "descr": "",
+      "category_id": 2,
+      "date": "2020-05-05",
+      "id": 3
+    },
+    {
+      "amount": 5000,
+      "descr": "",
+      "category_id": 2,
+      "date": "2020-05-06",
+      "id": 4
+    },
+    {
+      "amount": 5000,
+      "descr": "",
+      "category_id": 2,
+      "date": "2020-05-07",
+      "id": 5
     }
   ]
 }

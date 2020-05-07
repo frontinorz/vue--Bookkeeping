@@ -63,10 +63,6 @@
       target: {
         type: Object,
         required: true
-      },
-      id: {
-        type: Number,
-        required: true
       }
     },
     data() {
@@ -109,17 +105,18 @@
       categoryHandler(id) {
         this.category_id = id;
       },
-      editHandler() {
+      async editHandler() {
         let obj = {
+          id: this.target.id,
           amount: this.amount,
           descr: this.descr,
           category_id: this.category_id
         };
         if (this.mode === "expense") {
-          this.$store.commit("EDIT_EXPENSE", { id: this.id, obj: obj });
+          await this.$store.dispatch("UPDATE_EXPENSE", obj);
         }
         if (this.mode === "income") {
-          this.$store.commit("EDIT_INCOME", { id: this.id, obj: obj });
+          await this.$store.dispatch("UPDATE_INCOME", obj);
         }
         this.$emit("closeHandler");
       },
@@ -133,12 +130,11 @@
       }
     },
     watch: {
-      target: function(newVal, oldVal) {
+      target: function(newVal) {
         // watch it
         this.amount = newVal.amount;
         this.descr = newVal.descr;
         this.category_id = newVal.category_id;
-        console.log("Prop changed: ", newVal, " | was: ", oldVal);
       }
     }
   };

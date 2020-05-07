@@ -7,6 +7,7 @@ const url = 'http://localhost:3000'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     currentDate: new Date().toISOString().substr(0, 10),
     currentTable: {},
@@ -341,22 +342,32 @@ export default new Vuex.Store({
     setExpense(state, table) {
       state.expenseTable = table
     },
-    EDIT_EXPENSE(state, payload) {
-      let target = state.expenseTable[payload.id]
-      target.amount = payload.obj.amount
-      target.descr = payload.obj.descr
-      target.category_id = payload.obj.category_id
+    deleteExpense(state, index) {
+      state.expenseTable.splice(index, 1)
+    },
+    updateExpense(state, item) {
+      let target = state.expenseTable.find(expense =>
+        expense.id === item.id
+      )
+      target.amount = item.amount
+      target.descr = item.descr
+      target.category_id = item.category_id
     },
 
     // Income handler
     setIncome(state, table) {
       state.incomeTable = table
     },
-    EDIT_INCOME(state, payload) {
-      let target = state.incomeTable[payload.id]
-      target.amount = payload.obj.amount
-      target.descr = payload.obj.descr
-      target.category_id = payload.obj.category_id
+    deleteIncome(state, index) {
+      state.incomeTable.splice(index, 1)
+    },
+    updateIncome(state, item) {
+      let target = state.incomeTable.find(income =>
+        income.id === item.id
+      )
+      target.amount = item.amount
+      target.descr = item.descr
+      target.category_id = item.category_id
     },
   },
   actions: {
@@ -365,22 +376,35 @@ export default new Vuex.Store({
         commit('setData', res.data)
       });
     },
+
     // Expense handler
     GET_EXPENSE({ commit }) {
       axios.get(url + '/expenseTable').then((res) => {
         commit('setExpense', res.data)
-        console.log('GET')
-      });
+      })
     },
     CREATE_EXPENSE(context, item) {
-      axios.post(url + '/expenseTable', item).then(() => { });
+      axios.post(url + '/expenseTable', item).then(() => {
+        context.dispatch('GET_EXPENSE')
+      });
     },
-    DELETE_EXPENSE(context, id) {
-      axios.delete(url + '/expenseTable/' + id).then(() => { });
+    DELETE_EXPENSE(context, item) {
+      let index = context.state.expenseTable.indexOf(item)
+      if (index == -1) return false
+      axios.delete(url + '/expenseTable/' + item.id).then(() => {
+        context.commit('deleteExpense', index)
+      });
     },
-    UPDATE_EXPENSE() {
+    UPDATE_EXPENSE(context, item) {
+      axios.patch(url + '/expenseTable/' + item.id, {
+        amount: item.amount,
+        descr: item.descr,
+        category_id: item.category_id
+      }).then(() => {
+        context.commit('updateExpense', item)
+      });
+    },
 
-    },
     // Income handler
     GET_INCOME({ commit }) {
       axios.get(url + '/incomeTable').then((res) => {
@@ -388,10 +412,25 @@ export default new Vuex.Store({
       });
     },
     CREATE_INCOME(context, item) {
-      axios.post(url + '/incomeTable', item).then(() => { });
+      axios.post(url + '/incomeTable', item).then(() => {
+        context.dispatch('GET_INCOME')
+      });
     },
-    DELETE_INCOME(context, id) {
-      axios.delete(url + '/incomeTable/' + id).then(() => { });
+    DELETE_INCOME(context, item) {
+      let index = context.state.incomeTable.indexOf(item)
+      if (index == -1) return false
+      axios.delete(url + '/incomeTable/' + item.id).then(() => {
+        context.commit('deleteIncome', index)
+      });
+    },
+    UPDATE_INCOME(context, item) {
+      axios.patch(url + '/incomeTable/' + item.id, {
+        amount: item.amount,
+        descr: item.descr,
+        category_id: item.category_id
+      }).then(() => {
+        context.commit('updateIncome', item)
+      });
     },
   },
   modules: {

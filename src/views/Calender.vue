@@ -234,53 +234,44 @@
     },
     methods: {
       getEvents() {
-        let table = this.$store.state.table;
-        table.forEach(item => {
-          if (item.expenseTable.length) {
-            let sum = item.expenseTable.reduce((total, current) => {
-              return total + current.amount;
-            }, 0);
+        let expenseTable = this.$store.state.expenseTable;
+        let incomeTable = this.$store.state.incomeTable;
 
-            let event = {
-              start: item.date,
-              end: item.date,
-              name: `${this.numberFormat(sum)}$`,
-              type: "expense",
-              color: "#EF5350"
-            };
+        expenseTable.forEach(item => {
+          // 日期索引總價
 
-            this.events.push(event);
-          }
-          if (item.specialTable) {
-            let sum = item.specialTable.reduce((total, current) => {
-              return total + current.amount;
-            }, 0);
+          let event;
 
-            let event = {
+          if (item.isSpecial) {
+            event = {
               start: item.date,
               end: item.date,
               name: `${this.numberFormat(sum)}$`,
               type: "expense",
               color: "#FF9800"
             };
-
-            this.events.push(event);
-          }
-          if (item.incomeTable.length) {
-            let sum = item.incomeTable.reduce((total, current) => {
-              return total + current.amount;
-            }, 0);
-
-            let event = {
+          } else {
+            event = {
               start: item.date,
               end: item.date,
               name: `${this.numberFormat(sum)}$`,
-              type: "income",
-              color: "#009688"
+              type: "expense",
+              color: "#EF5350"
             };
-
-            this.events.push(event);
           }
+
+          this.events.push(event);
+        });
+        incomeTable.forEach(item => {
+          let event = {
+            start: item.date,
+            end: item.date,
+            name: `${this.numberFormat(sum)}$`,
+            type: "income",
+            color: "#009688"
+          };
+
+          this.events.push(event);
         });
       },
       getEventColor(event) {
