@@ -1,7 +1,8 @@
 1. 日期下在 router 內
 2. 計算機
-3. date出發邏輯
+3. (OK)date出發邏輯
     -應該要創建後再產生資料，不是移動到日期就產生
     -取得各月資料以當前頁面輸入為索引
-4. json-server
-5. list 點擊展開(多行明細)
+4. (OK)json-server
+5. (OK)list 點擊展開(多行明細)
+6. calender month picker

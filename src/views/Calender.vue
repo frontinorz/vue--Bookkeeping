@@ -1,104 +1,118 @@
 <template>
   <v-container>
-    <v-row class="fill-height">
-      <v-col cols="12">
-        <v-sheet height="64">
-          <v-toolbar
-            flat
-            color="white"
+    <v-card>
+      <v-row class="fill-height mb-2">
+        <v-col
+          class="py-0"
+          cols="12"
+          md="6"
+        >
+          <v-sheet height="64">
+            <v-toolbar
+              flat
+              color="white"
+            >
+              <v-btn
+                outlined
+                class="mr-4"
+                color="grey darken-2"
+                @click="setToday"
+              >
+                今日
+              </v-btn>
+              <v-btn
+                fab
+                text
+                small
+                color="grey darken-2"
+                @click="prev"
+              >
+                <v-icon small>mdi-chevron-left</v-icon>
+              </v-btn>
+              <v-btn
+                fab
+                text
+                small
+                color="grey darken-2"
+                @click="next"
+              >
+                <v-icon small>mdi-chevron-right</v-icon>
+              </v-btn>
+              <v-toolbar-title>{{ title }}</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+          </v-sheet>
+        </v-col>
+        <v-col
+          class="py-0 d-flex text-right justify-end"
+          cols="12"
+          md="6"
+        >
+          <v-card
+            :elevation=0
+            class="px-2"
           >
-            <v-btn
-              outlined
-              class="mr-4"
-              color="grey darken-2"
-              @click="setToday"
-            >
-              今日
-            </v-btn>
-            <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="prev"
-            >
-              <v-icon small>mdi-chevron-left</v-icon>
-            </v-btn>
-            <v-btn
-              fab
-              text
-              small
-              color="grey darken-2"
-              @click="next"
-            >
-              <v-icon small>mdi-chevron-right</v-icon>
-            </v-btn>
-            <v-toolbar-title>{{ title }}</v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
-        </v-sheet>
-        <v-sheet height="500">
-          <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            :events="events"
-            :event-color="getEventColor"
-            :now="today"
-            type="month"
-            locale="zh-tw"
-            @click:event="fundLink"
-            @change="updateRange"
-          ></v-calendar>
-        </v-sheet>
-      </v-col>
-    </v-row>
+            <v-card-title class="pb-0 pt-1 justify-end">預算餘額</v-card-title>
+            <v-card-text class="title pb-0">
+              <span class="pr-1">
+                {{ numberFormat(monthBalance) }}
+              </span>
+              / {{ numberFormat(monthBudget) }}
+            </v-card-text>
+          </v-card>
+          <v-card
+            :elevation=0
+            class="px-2"
+          >
+            <v-card-title class="pb-0 pt-1 justify-end">當月支出</v-card-title>
+            <v-card-text class="title pb-0">
+              <span class="pr-1">
+                {{ numberFormat(monthExpense) }}
+              </span>
+            </v-card-text>
+          </v-card>
+          <v-card
+            :elevation=0
+            class="px-2"
+          >
+            <v-card-title class="pb-0 pt-1 justify-end">當月收入</v-card-title>
+            <v-card-text class="title pb-0">
+              <span class="pr-1">
+                {{ numberFormat(monthIncome) }}
+              </span>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col
+          class="pb-0"
+          cols="12"
+        >
+          <v-sheet min-height="500">
+            <v-calendar
+              ref="calendar"
+              v-model="focus"
+              color="primary"
+              :events="events"
+              :event-color="getEventColor"
+              :now="today"
+              type="month"
+              locale="zh-tw"
+              @click:event="fundLink"
+              @change="updateRange"
+            ></v-calendar>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-card>
     <v-row>
       <v-col
         cols="12"
         md="6"
-      >
-        <v-card-title
-          class="justify-md-end align-end mr-md-2 font-weight-bold pa-1"
-          :class="[monthBalance < 0 ? 'red--text': 'grey--text text--darken-1' ]"
-        >
-          當月預算
-          <v-icon
-            class="align-self-center"
-            :class="[monthBalance < 0 ? 'red--text': 'grey--text text--darken-1' ]"
-          >
-            attach_money
-          </v-icon>
-          <span class="display-1 lh-1 font-weight-bold pr-2">
-            {{ numberFormat(monthBalance) }}
-          </span>
-          / {{ numberFormat(monthBudget) }}
-
-        </v-card-title>
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <v-card-title class="ml-md-2 grey--text text--darken-1 font-weight-bold pa-1 ">
-          當月特支
-          <v-icon class="grey--text text--darken-1">
-            attach_money
-          </v-icon>
-          <span class="display-1 lh-1 font-weight-bold pr-2">
-            {{ numberFormat(monthSpecialExpense) }}
-          </span>
-        </v-card-title>
-      </v-col>
-      <v-col
-        cols="12"
-        md="6"
+        v-if="expenseChartData.length"
       >
         <v-card style="min-height:200px;">
-          <v-card-title class="font-weight-bold red--text justify-center pb-0">
-            當月支出
-            <v-icon class="red--text">attach_money</v-icon>
-            {{ numberFormat(monthExpense) }}
+          <v-card-title class="font-weight-bold pb-0 pl-6">
+            支出分類
           </v-card-title>
           <HorizontalBarChart
             style="min-height:300px;"
@@ -109,12 +123,11 @@
       <v-col
         cols="12"
         md="6"
+        v-if="incomeChartData.length"
       >
         <v-card style="min-height:200px;">
-          <v-card-title class="font-weight-bold teal--text justify-center pb-0">
-            當月收入
-            <v-icon class="teal--text">attach_money</v-icon>
-            {{ numberFormat(monthIncome) }}
+          <v-card-title class="font-weight-bold pb-0 pl-6">
+            收入分類
           </v-card-title>
           <HorizontalBarChart
             style="min-height:300px;"
@@ -234,39 +247,60 @@
     },
     methods: {
       getEvents() {
-        let expenseTable = this.$store.state.expenseTable;
-        let incomeTable = this.$store.state.incomeTable;
+        let expenseTable = {};
+        let specialTable = {};
+        let incomeTable = {};
 
-        expenseTable.forEach(item => {
-          // 日期索引總價
-
-          let event;
-
-          if (item.isSpecial) {
-            event = {
-              start: item.date,
-              end: item.date,
-              name: `${this.numberFormat(sum)}$`,
-              type: "expense",
-              color: "#FF9800"
-            };
+        // Translate data into {date: sum of daliy amount} pair
+        this.$store.state.expenseTable.forEach(item => {
+          if (!item.isSpecial) {
+            if (!expenseTable[item.date]) expenseTable[item.date] = 0;
+            expenseTable[item.date] += item.amount;
           } else {
-            event = {
-              start: item.date,
-              end: item.date,
-              name: `${this.numberFormat(sum)}$`,
-              type: "expense",
-              color: "#EF5350"
-            };
+            if (!specialTable[item.date]) specialTable[item.date] = 0;
+            specialTable[item.date] += item.amount;
           }
+        });
+
+        incomeTable = this.$store.state.incomeTable.reduce((obj, item) => {
+          if (!obj[item.date]) obj[item.date] = 0;
+          obj[item.date] += item.amount;
+          return obj;
+        }, {});
+
+        expenseTable = Object.entries(expenseTable);
+        specialTable = Object.entries(specialTable);
+        incomeTable = Object.entries(incomeTable);
+
+        // Create event
+        expenseTable.forEach((item, index) => {
+          let event = {
+            start: expenseTable[index][0],
+            end: expenseTable[index][0],
+            name: `${this.numberFormat(expenseTable[index][1])}$`,
+            type: "expense",
+            color: "#EF5350"
+          };
 
           this.events.push(event);
         });
-        incomeTable.forEach(item => {
+
+        specialTable.forEach((item, index) => {
           let event = {
-            start: item.date,
-            end: item.date,
-            name: `${this.numberFormat(sum)}$`,
+            start: specialTable[index][0],
+            end: specialTable[index][0],
+            name: `${this.numberFormat(specialTable[index][1])}$`,
+            type: "expense",
+            color: "#FF9800"
+          };
+          this.events.push(event);
+        });
+
+        incomeTable.forEach((item, index) => {
+          let event = {
+            start: incomeTable[index][0],
+            end: incomeTable[index][0],
+            name: `${this.numberFormat(incomeTable[index][1])}$`,
             type: "income",
             color: "#009688"
           };
@@ -289,15 +323,17 @@
       updateRange({ start, end }) {
         this.start = start;
         this.end = end;
-        // Get month data
+        // console.log(start);
+        this.$store.commit("setDate", start.date);
       },
       fundLink({ nativeEvent, event }) {
         if (event.type === "expense") {
-          this.$router.push({ name: "expense", params: { date: event.start } });
+          this.$router.push({ name: "expense" });
         }
         if (event.type === "income") {
-          this.$router.push({ name: "income", params: { date: event.start } });
+          this.$router.push({ name: "income" });
         }
+        this.$store.commit("setDate", event.start);
         nativeEvent.stopPropagation();
       },
       getDataByCategory(table, category) {
@@ -314,6 +350,13 @@
       },
       numberFormat(num) {
         return new Intl.NumberFormat("en-US").format(num);
+      },
+      getColor(amount) {
+        if (amount <= 0) {
+          return "red--text";
+        } else {
+          return "grey--text text--darken-1";
+        }
       }
     }
   };
@@ -328,5 +371,8 @@
   }
   .lh-1 {
     line-height: 1 !important;
+  }
+  .v-calendar.v-calendar-events .v-calendar-weekly__day {
+    min-height: 80px;
   }
 </style>

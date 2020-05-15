@@ -101,7 +101,7 @@
         return this.$store.state.route.name;
       },
       category() {
-        return this.$store.getters["getCategoryList"];
+        return this.$store.getters["getCategoryList"](this.mode);
       },
       inputMode() {
         return this.modeList.find(
@@ -123,7 +123,7 @@
         this.isSpecial = false;
       },
       async addHandler() {
-        if (!this.category_id || !this.amount) return;
+        if (!this.amount) return;
 
         let obj = {
           amount: this.amount,

@@ -31,9 +31,26 @@
       return {};
     },
     computed: {
+      mode() {
+        return this.$store.state.route.name;
+      },
       category() {
-        return this.$store.getters["getCategoryItem"](this.item.category_id);
+        return this.$store.getters["getCategoryItem"](this.mode)(
+          this.item.category_id
+        );
       }
     }
   };
 </script>
+
+<style lang="scss" scoped>
+  .subtitle-one-line .v-list-item .v-list-item__subtitle,
+  .subtitle-one-line .v-list-item--three-line .v-list-item__subtitle {
+    -webkit-line-clamp: 1;
+  }
+  .v-list-item--active .v-list-item__subtitle {
+    max-height: 150px;
+    overflow: auto;
+    -webkit-line-clamp: 999 !important;
+  }
+</style>

@@ -161,11 +161,9 @@
       async deleteHandler() {
         if (this.mode === "expense") {
           await this.$store.dispatch("DELETE_EXPENSE", this.selectedItem);
-          // await this.$store.dispatch("GET_EXPENSE");
         }
         if (this.mode === "income") {
           await this.$store.dispatch("DELETE_INCOME", this.selectedItem);
-          // await this.$store.dispatch("GET_INCOME");
         }
         this.dialogDelete = false;
       }
@@ -173,14 +171,3 @@
   };
 </script>
 
-<style lang="scss" scoped>
-  .subtitle-one-line .v-list-item .v-list-item__subtitle,
-  .subtitle-one-line .v-list-item--three-line .v-list-item__subtitle {
-    -webkit-line-clamp: 1;
-  }
-  .v-list-item--active .v-list-item__subtitle {
-    max-height: 150px;
-    overflow: auto;
-    -webkit-line-clamp: 999 !important;
-  }
-</style>

@@ -10,7 +10,10 @@
           v-model="item"
           color="primary"
         >
-          <v-list-item to="/expense">
+          <v-list-item
+            to="/expense"
+            @click="setToday"
+          >
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
@@ -20,7 +23,10 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/income">
+          <v-list-item
+            to="/income"
+            @click="setToday"
+          >
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
@@ -30,7 +36,10 @@
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item to="/calender">
+          <v-list-item
+            to="/calender"
+            @click="setToday"
+          >
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
@@ -38,7 +47,7 @@
               <v-list-item-title>收支月曆</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item>
+          <v-list-item to="/state">
             <v-list-item-icon>
               <v-icon>mdi-contacts</v-icon>
             </v-list-item-icon>
@@ -117,7 +126,16 @@
       drawer: null,
       item: 0
     }),
-    computed: {}
+    mounted() {
+      // await
+      this.$store.dispatch("GET_DATA");
+      this.setToday;
+    },
+    methods: {
+      setToday() {
+        this.$store.commit("setDate", new Date().toISOString().substr(0, 10));
+      }
+    }
   };
 </script>
 

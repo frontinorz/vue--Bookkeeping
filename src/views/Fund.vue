@@ -48,10 +48,7 @@
       FundList,
       FundFoot
     },
-    mounted() {
-      this.$store.dispatch("GET_DATA");
-      this.$store.commit("setDate", new Date().toISOString().substr(0, 10));
-    },
+    mounted() {},
     computed: {
       mode() {
         return this.$store.state.route.name;

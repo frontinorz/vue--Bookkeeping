@@ -2,6 +2,7 @@
   <chart
     :options="options"
     :style="style"
+    :autoresize="true"
   />
 </template>
 
@@ -30,11 +31,7 @@
       seriesData: {
         type: Array,
         default() {
-          return [
-            [91852, "Orange Juice"],
-            [101852, "Lemon Juice"],
-            [20112, "Monkey"]
-          ];
+          return [];
         }
       }
     },
@@ -49,7 +46,12 @@
     computed: {
       options() {
         return {
-          grid: { containLabel: true },
+          grid: {
+            left: "2%",
+            right: "4%",
+            top: "10%",
+            containLabel: true
+          },
           tooltip: {},
           xAxis: { type: "value" },
           yAxis: {

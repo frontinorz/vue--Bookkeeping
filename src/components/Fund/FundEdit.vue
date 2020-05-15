@@ -6,8 +6,10 @@
     <v-container>
       <v-col cols="12">
         <v-chip-group
-          active-class="deep-purple accent-4 white--text"
+          mandatory
+          active-class="blue accent-4 white--text"
           column
+          v-model=category_id
         >
           <v-chip
             class="mr-2"
@@ -90,7 +92,7 @@
         return this.$store.state.route.name;
       },
       category() {
-        return this.$store.getters["getCategoryList"];
+        return this.$store.getters["getCategoryList"](this.mode);
       },
       inputMode() {
         return this.modeList.find(
@@ -122,11 +124,6 @@
       },
       closeHandler() {
         this.$emit("closeHandler");
-      },
-      refreshSelection() {
-        this.amount = this.target.amount;
-        this.descr = this.target.descr;
-        this.category_id = this.target.category_id;
       }
     },
     watch: {

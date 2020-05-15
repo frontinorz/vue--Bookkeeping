@@ -229,18 +229,19 @@ export default new Vuex.Store({
     ],
     expenseTable: [],
     incomeTable: [],
+
   },
   getters: {
-    getCategoryList: (state) => {
-      if (state.route.name === "expense") {
+    getCategoryList: (state) => (genre) => {
+      if (genre === "expense") {
         return state.categoryExpense
       }
-      if (state.route.name === "income") {
+      if (genre === "income") {
         return state.categoryIncome
       }
     },
-    getCategoryItem: (state, getters) => (id) => {
-      return getters.getCategoryList.find(item => item._id == id)
+    getCategoryItem: (state, getters) => (genre) => (id) => {
+      return getters.getCategoryList(genre).find(item => item._id == id)
     },
 
     getColorTheme: (state) => {
@@ -318,16 +319,6 @@ export default new Vuex.Store({
     },
     setDate(state, date) {
       state.currentDate = date
-      let dateTable = state.table.find(item => item.date == state.currentDate)
-      if (dateTable) {
-        state.currentTable = dateTable
-      } else {
-        state.currentTable = {
-          date: state.currentDate,
-        }
-        state.table.push(state.currentTable)
-      }
-
     },
     controlDate(state, dir) {
       let current = new Date(state.currentDate)

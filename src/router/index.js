@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import Fund from '@/views/Fund'
 import Calender from '@/views/Calender'
+import State from '@/views/State'
 
 Vue.use(VueRouter)
 
@@ -38,6 +39,11 @@ const routes = [
     path: '/calender',
     name: 'calender',
     component: Calender
+  },
+  {
+    path: '/state',
+    name: 'state',
+    component: State
   }
 ]
 

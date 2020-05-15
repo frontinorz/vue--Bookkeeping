@@ -42,7 +42,7 @@
     {
       "amount": 50,
       "descr": "",
-      "category_id": 1,
+      "category_id": 3,
       "date": "2020-05-04",
       "isSpecial": false,
       "id": 6
@@ -70,6 +70,54 @@
       "date": "2020-05-07",
       "isSpecial": false,
       "id": 9
+    },
+    {
+      "amount": 500,
+      "descr": "來自一月",
+      "category_id": 3,
+      "date": "2020-01-02",
+      "isSpecial": false,
+      "id": 10
+    },
+    {
+      "amount": 500,
+      "descr": "來自一月",
+      "category_id": 2,
+      "date": "2020-01-20",
+      "isSpecial": false,
+      "id": 11
+    },
+    {
+      "amount": 500,
+      "descr": "來自19年",
+      "category_id": 2,
+      "date": "2019-10-20",
+      "isSpecial": true,
+      "id": 11
+    },
+    {
+      "amount": 500,
+      "descr": "來自19年",
+      "category_id": 2,
+      "date": "2019-10-20",
+      "isSpecial": false,
+      "id": 11
+    },
+    {
+      "amount": 180,
+      "descr": "",
+      "category_id": 4,
+      "date": "2020-05-13",
+      "isSpecial": false,
+      "id": 12
+    },
+    {
+      "amount": 500,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-14",
+      "isSpecial": false,
+      "id": 13
     }
   ],
   "incomeTable": [
@@ -95,11 +143,18 @@
       "id": 4
     },
     {
-      "amount": 5000,
+      "amount": 1000,
       "descr": "",
       "category_id": 2,
       "date": "2020-05-07",
       "id": 5
+    },
+    {
+      "amount": 500,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-14",
+      "id": 6
     }
   ]
 }

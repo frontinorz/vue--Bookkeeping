@@ -3,15 +3,16 @@
     class="fund__footer"
     padless
     dark
+    :class="colorTheme"
   >
     <v-card
       class="flex"
       flat
       tile
+      style="background:transparent"
     >
       <v-card-title
         class="py-2 px-4"
-        :class="colorTheme"
         v-if="mode === 'expense'"
       >
         <div class="percent">
@@ -39,7 +40,6 @@
       </v-card-title>
       <v-card-title
         class="py-2 px-4"
-        :class="colorTheme"
         v-if="mode === 'income'"
       >
         <v-spacer></v-spacer>
@@ -90,7 +90,8 @@
     position: fixed;
     right: 0;
     bottom: 0;
-    width: calc(100% - 256px);
+    width: 100%;
+    padding-left: 256px;
     transition: width 0.3s 0.3s;
     @media screen and (max-width: 1264px) {
       width: 100%;
@@ -100,6 +101,11 @@
       > * {
         vertical-align: middle;
       }
+    }
+  }
+  .v-navigation-drawer--close {
+    .fund__footer {
+      width: 100%;
     }
   }
 </style>
