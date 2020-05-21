@@ -4,8 +4,12 @@
     class="pb-12"
   >
     <v-row>
-      <v-col cols="12">
+      <v-col
+        cols="12"
+        class="pt-0"
+      >
         <FundDate />
+        <v-divider></v-divider>
       </v-col>
       <v-col
         cols="12"

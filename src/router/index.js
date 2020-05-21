@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Fund from '@/views/Fund'
 import Calender from '@/views/Calender'
 import State from '@/views/State'
+import Setting from '@/views/Setting'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,11 @@ const routes = [
     path: '/state',
     name: 'state',
     component: State
+  },
+  {
+    path: '/Setting',
+    name: 'setting',
+    component: Setting
   }
 ]
 

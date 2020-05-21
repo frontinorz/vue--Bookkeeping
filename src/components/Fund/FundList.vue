@@ -1,19 +1,17 @@
 <template>
   <div>
     <v-card>
-      <v-card-title
-        class="px-4 py-2"
-        :class="colorTheme"
-      >
-        <span class="white--text">{{ title? title : modeText.title }}</span>
+      <v-card-title class="px-4 py-4 font-weight-bold">
+        <span>{{ title? title : modeText.title }}</span>
       </v-card-title>
+      <v-divider></v-divider>
       <v-container>
         <v-list
           three-line
           class="subtitle-one-line"
         >
           <template v-if="itemList.length">
-            <v-list-item-group active-class="pink--text">
+            <v-list-item-group active-class="blue--text">
               <FundListItem
                 v-for="item in itemList"
                 :key="item.id"

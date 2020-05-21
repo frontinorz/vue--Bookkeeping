@@ -21,6 +21,11 @@
         type: Array
       }
     },
+    data() {
+      return {
+        autoresize: true
+      };
+    },
     computed: {
       options() {
         return {
@@ -66,17 +71,13 @@
           series: this.seriesData,
           color: ["#EF5350", "#FF9800", "#009688"]
         };
+      },
+      style() {
+        return {
+          width: "100%",
+          height: this.$vuetify.breakpoint.smAndDown ? "300px" : "100%"
+        };
       }
-    },
-    methods: {},
-    data() {
-      return {
-        style: {
-          // height: this.height + "%",
-          width: "100%"
-        },
-        autoresize: true
-      };
     }
   };
 </script>

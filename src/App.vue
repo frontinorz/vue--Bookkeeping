@@ -8,14 +8,14 @@
       <v-list>
         <v-list-item-group
           v-model="item"
-          color="primary"
+          color="cyan darken-1"
         >
           <v-list-item
             to="/expense"
             @click="setToday"
           >
             <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
+              <v-icon>mdi-cash-minus</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
@@ -28,7 +28,7 @@
             @click="setToday"
           >
             <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
+              <v-icon>mdi-cash-plus</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>
@@ -41,7 +41,7 @@
             @click="setToday"
           >
             <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
+              <v-icon>mdi-calendar-month</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>收支月曆</v-list-item-title>
@@ -49,23 +49,15 @@
           </v-list-item>
           <v-list-item to="/state">
             <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
+              <v-icon>mdi-chart-bar</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>年度分析</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item>
+          <v-list-item to="/setting">
             <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>資產</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-contacts</v-icon>
+              <v-icon>mdi-cog</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>設定</v-list-item-title>
@@ -78,7 +70,7 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
-      color="blue darken-3"
+      color="cyan darken-1"
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -86,15 +78,9 @@
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <span class="hidden-sm-and-down">資產記帳本</span>
+        <span class="hidden-sm-and-down">Vue 記帳</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-apps</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>mdi-bell</v-icon>
-      </v-btn>
       <v-btn
         icon
         large
@@ -127,7 +113,6 @@
       item: 0
     }),
     mounted() {
-      // await
       this.$store.dispatch("GET_DATA");
       this.setToday;
     },

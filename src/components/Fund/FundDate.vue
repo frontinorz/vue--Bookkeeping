@@ -1,9 +1,10 @@
 <template>
-  <v-card>
+  <v-card :elevation=0>
     <v-toolbar
       class="white--text"
       dark
       :class="colorTheme"
+      :elevation=0
     >
       <v-spacer></v-spacer>
       <v-btn

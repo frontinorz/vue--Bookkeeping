@@ -1,23 +1,21 @@
 <template>
   <v-card>
-    <v-card-title
-      class="px-4 py-2"
-      :class="colorTheme"
-    >
-      <span class="white--text">{{ inputMode.title }}</span>
+    <v-card-title class="px-4 py-4 font-weight-bold">
+      <span class="">{{ inputMode.title }}</span>
     </v-card-title>
+    <v-divider></v-divider>
     <v-container>
       <v-col cols="12">
         <v-chip-group
           mandatory
-          active-class="blue accent-4 white--text"
+          active-class="cyan darken-1 white--text"
           column
           v-model=category_id
         >
           <v-chip
             class="mr-2"
             v-for="item in category"
-            :key="item._id"
+            :key="item.id"
           >
             <v-icon>{{ item.icon }}</v-icon>
             <span>{{ item.title }}</span>
@@ -27,15 +25,19 @@
       <v-col cols="12">
         <v-text-field
           type="number"
+          color="cyan darken-1"
           prepend-icon="mdi-currency-usd"
           placeholder="0"
           v-model.number="amount"
+          :rules="amountRule"
+          validate-on-blur="true"
           dense
         />
       </v-col>
       <v-col cols="12">
         <v-textarea
           :placeholder="inputMode.placeholder"
+          color="cyan darken-1"
           rows="1"
           prepend-icon="comment"
           v-model="descr"
@@ -48,6 +50,7 @@
       >
         <v-checkbox
           class="mt-0"
+          color="cyan darken-1"
           v-model="isSpecial"
           label="特別支出(不納入預算)"
         ></v-checkbox>
@@ -64,8 +67,9 @@
         <v-btn
           text
           color="error"
+          @click="clearInput"
         >
-          取消
+          清除
         </v-btn>
       </v-card-actions>
     </v-container>
@@ -93,7 +97,8 @@
             title: "新增收入",
             placeholder: "收入描述..."
           }
-        ]
+        ],
+        amountRule: [value => value > 0 || "此為必須欄位"]
       };
     },
     computed: {

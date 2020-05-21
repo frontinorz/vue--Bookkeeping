@@ -96,6 +96,7 @@
     @media screen and (max-width: 1264px) {
       width: 100%;
       transition: width 0.3s;
+      padding-left: 0;
     }
     .headline {
       > * {

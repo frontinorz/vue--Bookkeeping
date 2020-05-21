@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-card>
       <v-row class="fill-height mb-2">
         <v-col
@@ -52,8 +52,14 @@
             :elevation=0
             class="px-2"
           >
-            <v-card-title class="pb-0 pt-1 justify-end">預算餘額</v-card-title>
-            <v-card-text class="title pb-0">
+            <v-card-title
+              class="pb-0 pt-1 justify-end"
+              :class="titleFontSize"
+            >預算餘額</v-card-title>
+            <v-card-text
+              class="pb-0"
+              :class="titleFontSize"
+            >
               <span class="pr-1">
                 {{ numberFormat(monthBalance) }}
               </span>
@@ -64,8 +70,14 @@
             :elevation=0
             class="px-2"
           >
-            <v-card-title class="pb-0 pt-1 justify-end">當月支出</v-card-title>
-            <v-card-text class="title pb-0">
+            <v-card-title
+              class="pb-0 pt-1 justify-end"
+              :class="titleFontSize"
+            >當月支出</v-card-title>
+            <v-card-text
+              class="pb-0"
+              :class="titleFontSize"
+            >
               <span class="pr-1">
                 {{ numberFormat(monthExpense) }}
               </span>
@@ -75,8 +87,14 @@
             :elevation=0
             class="px-2"
           >
-            <v-card-title class="pb-0 pt-1 justify-end">當月收入</v-card-title>
-            <v-card-text class="title pb-0">
+            <v-card-title
+              class="pb-0 pt-1 justify-end"
+              :class="titleFontSize"
+            >當月收入</v-card-title>
+            <v-card-text
+              class="pb-0"
+              :class="titleFontSize"
+            >
               <span class="pr-1">
                 {{ numberFormat(monthIncome) }}
               </span>
@@ -91,7 +109,7 @@
             <v-calendar
               ref="calendar"
               v-model="focus"
-              color="primary"
+              color="cyan darken-1"
               :events="events"
               :event-color="getEventColor"
               :now="today"
@@ -104,13 +122,13 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-row>
+    <v-row class="align-stretch">
       <v-col
         cols="12"
         md="6"
         v-if="expenseChartData.length"
       >
-        <v-card style="min-height:200px;">
+        <v-card style="min-height:200px;height:100%">
           <v-card-title class="font-weight-bold pb-0 pl-6">
             支出分類
           </v-card-title>
@@ -125,7 +143,7 @@
         md="6"
         v-if="incomeChartData.length"
       >
-        <v-card style="min-height:200px;">
+        <v-card style="min-height:200px;height:100%">
           <v-card-title class="font-weight-bold pb-0 pl-6">
             收入分類
           </v-card-title>
@@ -157,16 +175,9 @@
       selectedElement: null,
       selectedOpen: false,
       events: [],
-      color: "#ffffff",
-      names: [
-        "blue",
-        "indigo",
-        "deep-purple",
-        "cyan",
-        "green",
-        "orange",
-        "grey darken-1"
-      ],
+      colorExpense: "#FF5252",
+      colorIncome: "#26A69A",
+      colorSpecial: "#FF9800",
       dialog: false,
       colorDialog: false,
       datePickerStart: false,
@@ -243,6 +254,10 @@
       },
       monthBalance() {
         return this.monthBudget - this.monthExpense;
+      },
+
+      titleFontSize() {
+        return this.$vuetify.breakpoint.xs ? "subtitle-1 px-1" : "title";
       }
     },
     methods: {
@@ -279,7 +294,7 @@
             end: expenseTable[index][0],
             name: `${this.numberFormat(expenseTable[index][1])}$`,
             type: "expense",
-            color: "#EF5350"
+            color: this.colorExpense
           };
 
           this.events.push(event);
@@ -291,7 +306,7 @@
             end: specialTable[index][0],
             name: `${this.numberFormat(specialTable[index][1])}$`,
             type: "expense",
-            color: "#FF9800"
+            color: this.colorSpecial
           };
           this.events.push(event);
         });
@@ -302,7 +317,7 @@
             end: incomeTable[index][0],
             name: `${this.numberFormat(incomeTable[index][1])}$`,
             type: "income",
-            color: "#009688"
+            color: this.colorIncome
           };
 
           this.events.push(event);
@@ -338,7 +353,7 @@
       },
       getDataByCategory(table, category) {
         let tableCate = table.reduce((obj, item) => {
-          let cate = category.find(el => el._id == item.category_id).title;
+          let cate = category.find(el => el.id == item.category_id).title;
           if (!obj[cate]) {
             obj[cate] = 0;
           }

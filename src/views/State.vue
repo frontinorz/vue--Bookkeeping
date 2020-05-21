@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
       <v-col cols="12">
         <v-card class="mb-3">
@@ -26,40 +26,63 @@
                 :elevation=0
                 class="px-2 text-right"
               >
-                <v-card-title class="py-0 justify-end">年度支出</v-card-title>
-                <v-card-text class="title pb-0">{{numberFormat(expenseYearly)}}</v-card-text>
+                <v-card-title
+                  class="py-0 justify-end"
+                  :class="titleFontSize"
+                >年度支出</v-card-title>
+                <v-card-text
+                  class="pb-0"
+                  :class="titleFontSize"
+                >{{numberFormat(expenseYearly)}}</v-card-text>
               </v-card>
               <v-card
                 :elevation=0
                 class="px-2 text-right"
               >
-                <v-card-title class="py-0 justify-end">年度收入</v-card-title>
-                <v-card-text class="title pb-0">{{numberFormat(incomeYearly)}}</v-card-text>
+                <v-card-title
+                  class="py-0 justify-end"
+                  :class="titleFontSize"
+                >年度收入</v-card-title>
+                <v-card-text
+                  class="pb-0"
+                  :class="titleFontSize"
+                >{{numberFormat(incomeYearly)}}</v-card-text>
               </v-card>
               <v-card
                 :elevation=0
                 class="px-2 text-right"
               >
-                <v-card-title class="py-0 justify-end">年度收支</v-card-title>
+                <v-card-title
+                  class="py-0 justify-end"
+                  :class="titleFontSize"
+                >年度收支</v-card-title>
                 <v-card-text
                   class="title pb-0"
-                  :class="getColor(balanceYearly)"
-                >{{numberFormat(balanceYearly)}}</v-card-text>
+                  :class="titleFontSize"
+                >
+                  <span :class="getColorBalance(balanceYearly)">
+                    {{numberFormat(balanceYearly)}}
+                  </span>
+                </v-card-text>
               </v-card>
             </v-col>
           </v-row>
           <v-divider></v-divider>
-          <v-container>
+          <v-card-text>
             <v-row>
               <v-col
                 cols="12"
                 md="5"
               >
                 <v-data-table
+                  class="yearTable"
+                  locale="zh-tw"
+                  v-resize="tableRwd"
                   :headers="tableHeaders"
                   :items="dataTable"
-                  :disable-pagination="true"
-                  :hide-default-footer="true"
+                  :disable-pagination="isTableMobile"
+                  :hide-default-footer="isTableMobile"
+                  :items-per-page="tableItemPerPage"
                 >
                   <template v-slot:item.expense="{ item }">
                     <span>{{ numberFormat(item.expense)}}</span>
@@ -71,15 +94,20 @@
                     <span>{{ numberFormat(item.special)}}</span>
                   </template>
                   <template v-slot:item.balance="{ item }">
-                    <span :class="getColor(item.balance)">{{ numberFormat(item.balance)}}</span>
+                    <span :class="getColorBalance(item.balance)">
+                      {{ numberFormat(item.balance) }}
+                    </span>
                   </template>
                   <template v-slot:item.budget="{ item }">
-                    <span :class="getColor(item.budget)">{{ numberFormat(item.budget)}}</span>
+                    <span :class="getColor(item.budget)">
+                      {{ numberFormat(item.budget)}}
+                    </span>
                   </template>
 
                 </v-data-table>
               </v-col>
               <v-col
+                class="d-flex align-end"
                 cols="12"
                 md="7"
               >
@@ -87,13 +115,13 @@
               </v-col>
 
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
         <v-card
           class="mb-3"
           v-if="expenseByCatogory"
         >
-          <v-container>
+          <v-card-text>
             <v-row>
               <v-col
                 cols="12"
@@ -112,13 +140,13 @@
                 <PieChart :seriesData="expenseCatogoryPieChart" />
               </v-col>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
         <v-card
           class="mb-3"
           v-if="incomeByCatogory"
         >
-          <v-container>
+          <v-card-text>
             <v-row>
               <v-col
                 cols="12"
@@ -138,7 +166,7 @@
                 <PieChart :seriesData="incomeCatogoryPieChart" />
               </v-col>
             </v-row>
-          </v-container>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -177,9 +205,10 @@
         { text: "收入", value: "income" },
         { text: "支出", value: "expense" },
         { text: "特支", value: "special" },
-        { text: "預算平衡", value: "budget" },
+        { text: "預算餘額", value: "budget" },
         { text: "收支平衡", value: "balance" }
-      ]
+      ],
+      windowX: null
     }),
     computed: {
       // By month
@@ -265,7 +294,7 @@
             let expense = this.expenseEachMonth.yearExpense[years[i]]
               ? this.expenseEachMonth.yearExpense[years[i]][j]
               : 0;
-            let special = this.expenseEachMonth.yearExpense[years[i]]
+            let special = this.expenseEachMonth.yearSpecial[years[i]]
               ? this.expenseEachMonth.yearSpecial[years[i]][j]
               : 0;
 
@@ -363,11 +392,31 @@
       },
       incomeCatogoryPieChart() {
         return this.dataPieChart(this.incomeByCatogory);
+      },
+
+      // Table RWD style
+      isTableMobile() {
+        return !this.$vuetify.breakpoint.xs;
+      },
+      tableItemPerPage() {
+        return !this.$vuetify.breakpoint.xs ? 12 : 3;
+      },
+
+      // Font RWD style
+      titleFontSize() {
+        return this.$vuetify.breakpoint.xs ? "subtitle-1 px-1" : "title";
       }
     },
     methods: {
       getColor(amount) {
         if (amount <= 0) return "red--text";
+      },
+      getColorBalance(amount) {
+        if (amount <= 0) {
+          return "red--text";
+        } else {
+          return "teal--text";
+        }
       },
       numberFormat(num) {
         return new Intl.NumberFormat("en-US").format(num);
@@ -411,10 +460,21 @@
         }
 
         return pieData.sort((a, b) => (a.value > b.value ? 1 : -1));
+      },
+      tableRwd() {
+        this.windowX = window.innerWidth;
       }
     }
   };
 </script>
 
-<style>
+<style lang="scss">
+  .v-data-table.yearTable {
+    td {
+      height: 32px;
+    }
+    .v-data-table__mobile-row {
+      min-height: 32px;
+    }
+  }
 </style>

@@ -20,6 +20,7 @@
       theme: {
         type: String
       },
+      // 計算資料筆數乘以barWidth
       height: {
         type: Number,
         default: 100
@@ -37,10 +38,10 @@
     },
     data() {
       return {
-        style: {
-          height: "100%",
-          width: "100%"
-        }
+        // style: {
+        //   height: "100%",
+        //   width: "100%"
+        // }
       };
     },
     computed: {
@@ -48,7 +49,7 @@
         return {
           grid: {
             left: "2%",
-            right: "4%",
+            right: "5%",
             top: "10%",
             containLabel: true
           },
@@ -79,21 +80,26 @@
                   color: function(params) {
                     // build a color map as your need.
                     var colorList = [
-                      "#C1232B",
-                      "#B5C334",
-                      "#FCCE10",
-                      "#E87C25",
-                      "#27727B",
-                      "#FE8463",
-                      "#9BCA63",
-                      "#FAD860",
-                      "#F3A43B",
-                      "#60C0DD",
-                      "#D7504B",
-                      "#C6E579",
-                      "#F4E001",
-                      "#F0805A",
-                      "#26C0C0"
+                      "#2ec7c9",
+                      "#b6a2de",
+                      "#5ab1ef",
+                      "#ffb980",
+                      "#d87a80",
+                      "#8d98b3",
+                      "#e5cf0d",
+                      "#97b552",
+                      "#95706d",
+                      "#dc69aa",
+                      "#07a2a4",
+                      "#9a7fd1",
+                      "#588dd5",
+                      "#f5994e",
+                      "#c05050",
+                      "#59678c",
+                      "#c9ab00",
+                      "#7eb00a",
+                      "#6f5553",
+                      "#c14089"
                     ];
                     return colorList[params.dataIndex];
                   }
@@ -103,10 +109,14 @@
           ],
           color: ["#006699", "#4cabce"]
         };
+      },
+      style() {
+        let dataCount = this.seriesData.length - 1;
+        return {
+          width: "100%",
+          height: this.barWidth * (dataCount + 10) + "px"
+        };
       }
-      // dataRanking(){
-
-      // }
     }
   };
 </script>

@@ -12,224 +12,11 @@ export default new Vuex.Store({
     currentDate: new Date().toISOString().substr(0, 10),
     currentTable: {},
     budget: 15000,
-    categoryExpense: [
-      {
-        _id: 0,
-        title: "未分類",
-        icon: "mdi-star",
-        order: 0
-      },
-      {
-        _id: 1,
-        title: "早餐",
-        icon: "mdi-star",
-        order: 1
-      },
-      {
-        _id: 2,
-        title: "午餐",
-        icon: "mdi-star",
-        order: 2
-      },
-      {
-        _id: 3,
-        title: "晚餐",
-        icon: "mdi-star",
-        order: 3
-      },
-      {
-        _id: 4,
-        title: "購物",
-        icon: "mdi-star",
-        order: 4
-      }
-    ],
-    categoryIncome: [
-      {
-        _id: 0,
-        title: "未分類",
-        icon: "mdi-star",
-        order: 0
-      },
-      {
-        _id: 1,
-        title: "薪水",
-        icon: "mdi-star",
-        order: 1
-      },
-      {
-        _id: 2,
-        title: "獎金",
-        icon: "mdi-star",
-        order: 2
-      },
-      {
-        _id: 3,
-        title: "投資",
-        icon: "mdi-star",
-        order: 3
-      }
-    ],
-    table: [
-      {
-        date: '2020-03-10',
-        expenseTable: [
-          {
-            amount: 35,
-            descr: "蛋餅",
-            category_id: 1
-          },
-          {
-            amount: 300,
-            descr: "牛肉麵",
-            category_id: 2
-          },
-          {
-            amount: 50,
-            descr: "滷肉飯",
-            category_id: 3
-          }
-        ],
-        incomeTable: [
-          {
-            amount: 24000,
-            descr: "薪水",
-            category_id: 1
-          },
-          {
-            amount: 200,
-            descr: "統一發票中獎",
-            category_id: 1
-          },
-        ]
-      },
-      {
-        date: '2020-03-09',
-        expenseTable: [
-          {
-            amount: 40,
-            descr: "豬排漢堡",
-            category_id: 1
-          },
-          {
-            amount: 150,
-            descr: "義大利麵",
-            category_id: 2
-          },
-          {
-            amount: 50,
-            descr: "滷肉飯",
-            category_id: 3
-          }
-        ],
-        incomeTable: [
-          {
-            amount: 100,
-            descr: "撿到錢",
-            category_id: 2
-          }
-        ]
-      },
-      {
-        date: '2020-04-13',
-        expenseTable: [
-          {
-            amount: 35,
-            descr: "蛋餅",
-            category_id: 1
-          },
-          {
-            amount: 100,
-            descr: "牛肉麵",
-            category_id: 2
-          },
-          {
-            amount: 50,
-            descr: "滷肉飯",
-            category_id: 3
-          }
-        ],
-        incomeTable: [
-          {
-            amount: 35000,
-            descr: "薪水",
-            category_id: 1
-          },
-          {
-            amount: 500,
-            descr: "統一發票中獎",
-            category_id: 1
-          },
-        ]
-      },
-      {
-        date: '2020-04-14',
-        expenseTable: [
-          {
-            amount: 50,
-            descr: "豬排漢堡",
-            category_id: 1
-          },
-          {
-            amount: 100,
-            descr: "青醬義大利麵",
-            category_id: 2
-          },
-          {
-            amount: 50,
-            descr: "滷肉飯",
-            category_id: 3
-          },
-          {
-            amount: 2500,
-            descr: "日常用品",
-            category_id: 4
-          }
-        ],
-        incomeTable: [
-          {
-            amount: 100,
-            descr: "撿到錢",
-            category_id: 2
-          }
-        ]
-      },
-      {
-        date: '2020-04-27',
-        expenseTable: [
-        ],
-        incomeTable: [
-          {
-            amount: 100,
-            descr: "撿到錢",
-            category_id: 2
-          }
-        ]
-      },
-      {
-        date: '2020-04-29',
-        expenseTable: [
-        ],
-        incomeTable: [
-          {
-            amount: 100,
-            descr: "撿到錢",
-            category_id: 2
-          }
-        ],
-        specialTable: [
-          {
-            amount: 20000,
-            descr: "出國旅遊",
-            category_id: 2,
-            isSpecial: true
-          }
-        ]
-      }
-    ],
+    iconBank: [],
+    categoryExpense: [],
+    categoryIncome: [],
     expenseTable: [],
-    incomeTable: [],
-
+    incomeTable: []
   },
   getters: {
     getCategoryList: (state) => (genre) => {
@@ -241,15 +28,15 @@ export default new Vuex.Store({
       }
     },
     getCategoryItem: (state, getters) => (genre) => (id) => {
-      return getters.getCategoryList(genre).find(item => item._id == id)
+      return getters.getCategoryList(genre).find(item => item.id == id)
     },
 
     getColorTheme: (state) => {
       if (state.route.name === "expense") {
-        return "red lighten-1";
+        return "red accent-2 white--text";
       }
       else if (state.route.name === "income") {
-        return "teal lighten-1";
+        return "teal lighten-1 white--text";
       }
       else {
         return "blue";
@@ -305,17 +92,24 @@ export default new Vuex.Store({
       return table.reduce((total, current) => { return total + current.amount }, 0)
     },
 
+
+    getDate(state) {
+      return state.currentDate
+    },
     getBudget(state) {
       return state.budget
     },
-    getDate(state) {
-      return state.currentDate
+    getIcons(state) {
+      return state.iconBank
     }
   },
   mutations: {
     setData(state, data) {
       state.expenseTable = data.expenseTable
       state.incomeTable = data.incomeTable
+      state.categoryExpense = data.expenseCategory
+      state.categoryIncome = data.incomeCategory
+      state.budget = data.settings.budgetAmount
     },
     setDate(state, date) {
       state.currentDate = date
@@ -360,6 +154,26 @@ export default new Vuex.Store({
       target.descr = item.descr
       target.category_id = item.category_id
     },
+
+    // Budget Handler
+    setBudget(state, amount) {
+      state.budget = amount
+    },
+
+    // Category Handler
+    setIconBank(state, data) {
+      state.iconBank = data
+    },
+    deleteCategory(state, table) {
+      table.forEach(item => item.category_id = 0)
+    },
+    setExpenseCategory(state, data) {
+      state.categoryExpense = data
+    },
+    setIncomeCategory(state, data) {
+      state.categoryIncome = data
+    }
+
   },
   actions: {
     GET_DATA({ commit }) {
@@ -379,13 +193,6 @@ export default new Vuex.Store({
         context.dispatch('GET_EXPENSE')
       });
     },
-    DELETE_EXPENSE(context, item) {
-      let index = context.state.expenseTable.indexOf(item)
-      if (index == -1) return false
-      axios.delete(url + '/expenseTable/' + item.id).then(() => {
-        context.commit('deleteExpense', index)
-      });
-    },
     UPDATE_EXPENSE(context, item) {
       axios.patch(url + '/expenseTable/' + item.id, {
         amount: item.amount,
@@ -393,6 +200,13 @@ export default new Vuex.Store({
         category_id: item.category_id
       }).then(() => {
         context.commit('updateExpense', item)
+      });
+    },
+    DELETE_EXPENSE(context, item) {
+      let index = context.state.expenseTable.indexOf(item)
+      if (index == -1) return false
+      axios.delete(url + '/expenseTable/' + item.id).then(() => {
+        context.commit('deleteExpense', index)
       });
     },
 
@@ -407,13 +221,6 @@ export default new Vuex.Store({
         context.dispatch('GET_INCOME')
       });
     },
-    DELETE_INCOME(context, item) {
-      let index = context.state.incomeTable.indexOf(item)
-      if (index == -1) return false
-      axios.delete(url + '/incomeTable/' + item.id).then(() => {
-        context.commit('deleteIncome', index)
-      });
-    },
     UPDATE_INCOME(context, item) {
       axios.patch(url + '/incomeTable/' + item.id, {
         amount: item.amount,
@@ -423,6 +230,117 @@ export default new Vuex.Store({
         context.commit('updateIncome', item)
       });
     },
+    DELETE_INCOME(context, item) {
+      let index = context.state.incomeTable.indexOf(item)
+      if (index == -1) return false
+      axios.delete(url + '/incomeTable/' + item.id).then(() => {
+        context.commit('deleteIncome', index)
+      });
+    },
+
+    // Budget Handler
+    GET_BUDGET({ commit }) {
+      axios.get(url + '/settings').then((res) => {
+        commit('setBudget', res.data.budgetAmount)
+      })
+    },
+    UPDATE_BUDGET(context, amount) {
+      axios.patch(url + '/settings', {
+        budgetAmount: amount
+      }).then(() => {
+        context.commit('setBudget', amount)
+      })
+    },
+
+    // Category handler
+    GET_ICON({ commit }) {
+      axios.get(url + '/iconBank').then((res) => {
+        commit('setIconBank', res.data)
+      })
+    },
+    // - Expense Category
+    GET_EXPENSE_CATEGORY({ commit }) {
+      axios.get(url + '/expenseCategory').then((res) => {
+        commit('setExpenseCategory', res.data)
+      })
+    },
+    CREATE_EXPENSE_CATEGORY(context, item) {
+      axios.post(url + '/expenseCategory', item).then(() => {
+        context.dispatch('GET_EXPENSE_CATEGORY')
+      });
+    },
+    UPDATE_EXPENSE_CATEGORY(context, item) {
+      axios.patch(url + '/expenseCategory/' + item.id, {
+        name: item.name,
+        icon: item.icon
+      }).then(() => {
+        context.dispatch('GET_EXPENSE_CATEGORY')
+      });
+    },
+    DELETE_EXPENSE_CATEGORY(context, id) {
+      axios.delete(url + '/expenseCategory/' + id).then(() => {
+        context.dispatch('GET_EXPENSE_CATEGORY')
+        // 抓出所有應用此分類 id 的物件
+        let expenseSelected = context.state.expenseTable
+          .filter(item => item.category_id == id)
+        if (expenseSelected.length == 0) return
+
+        // 取出 id
+        let expenseSelectedId = expenseSelected.map(item => item.id)
+
+        // 一次送出全部的修改
+        axios.all(expenseSelectedId.map(id => {
+          axios.patch(url + '/expenseTable/' + id, {
+            category_id: 0
+          })
+        }))
+          .then(() => {
+            context.commit('deleteCategory', expenseSelected)
+          });
+      });
+    },
+    // - Income Category
+    GET_INCOME_CATEGORY({ commit }) {
+      axios.get(url + '/incomeCategory').then((res) => {
+        commit('setIncomeCategory', res.data)
+      })
+    },
+    CREATE_INCOME_CATEGORY(context, item) {
+      axios.post(url + '/incomeCategory', item).then(() => {
+        context.dispatch('GET_INCOME_CATEGORY')
+      });
+    },
+    UPDATE_INCOME_CATEGORY(context, item) {
+      axios.patch(url + '/incomeCategory/' + item.id, {
+        name: item.name,
+        icon: item.icon
+      }).then(() => {
+        context.dispatch('GET_INCOME_CATEGORY')
+      });
+    },
+    DELETE_INCOME_CATEGORY(context, id) {
+      axios.delete(url + '/incomeCategory/' + id).then(() => {
+        context.dispatch('GET_INCOME_CATEGORY')
+        // 抓出所有應用此分類 id 的物件
+        let incomeSelected = context.state.incomeTable
+          .filter(item => item.category_id == id)
+        if (incomeSelected.length == 0) return
+
+        // 取出 id
+        let incomeSelectedId = incomeSelected.map(item => item.id)
+
+        // 一次送出全部的修改
+        axios.all(incomeSelectedId.map(id => {
+          axios.patch(url + '/incomeTable/' + id, {
+            category_id: 0
+          })
+        }))
+          .then(() => {
+            context.commit('deleteCategory', incomeSelected)
+          });
+      });
+    },
+
   },
   modules: {
   }

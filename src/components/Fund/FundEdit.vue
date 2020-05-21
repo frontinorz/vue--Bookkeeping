@@ -14,8 +14,8 @@
           <v-chip
             class="mr-2"
             v-for="item in category"
-            :key="item._id"
-            @click="categoryHandler(item._id)"
+            :key="item.id"
+            @click="categoryHandler(item.id)"
           >
             <v-icon>{{ item.icon }}</v-icon>
             <span>{{ item.title }}</span>
@@ -28,6 +28,8 @@
           prepend-icon="mdi-currency-usd"
           placeholder="0"
           v-model.number="amount"
+          :rules="amountRule"
+          validate-on-blur="true"
         />
       </v-col>
       <v-col cols="12">
@@ -84,7 +86,8 @@
             title: "修改收入",
             placeholder: "收入描述..."
           }
-        ]
+        ],
+        amountRule: [value => value > 0 || "此為必須欄位"]
       };
     },
     computed: {
@@ -108,6 +111,8 @@
         this.category_id = id;
       },
       async editHandler() {
+        if (!this.amount) return;
+
         let obj = {
           id: this.target.id,
           amount: this.amount,
