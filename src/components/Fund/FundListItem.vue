@@ -53,4 +53,10 @@
     overflow: auto;
     -webkit-line-clamp: 999 !important;
   }
+  .v-list--three-line .v-list-item,
+  .v-list-item--three-line {
+    @media screen and (max-width: 600px) {
+      min-height: 68px;
+    }
+  }
 </style>

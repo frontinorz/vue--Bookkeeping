@@ -1,21 +1,19 @@
 <template>
-  <v-card>
+  <v-card :loading="isLoading">
     <v-card-title :class="colorTheme">
       <span class="white--text">{{ inputMode.title }}</span>
     </v-card-title>
     <v-container>
       <v-col cols="12">
         <v-chip-group
-          mandatory
-          active-class="blue accent-4 white--text"
+          active-class="cyan darken-1 white--text"
           column
-          v-model=category_id
+          v-model=categoryIndex
         >
           <v-chip
             class="mr-2"
             v-for="item in category"
             :key="item.id"
-            @click="categoryHandler(item.id)"
           >
             <v-icon>{{ item.icon }}</v-icon>
             <span>{{ item.title }}</span>
@@ -26,15 +24,17 @@
         <v-text-field
           type="number"
           prepend-icon="mdi-currency-usd"
+          color="cyan darken-1"
           placeholder="0"
           v-model.number="amount"
           :rules="amountRule"
-          validate-on-blur="true"
+          validate-on-blur
         />
       </v-col>
       <v-col cols="12">
         <v-textarea
           :placeholder="inputMode.placeholder"
+          color="cyan darken-1"
           rows="1"
           prepend-icon="comment"
           v-model="descr"
@@ -69,12 +69,18 @@
         required: true
       }
     },
+    mounted() {
+      this.categoryIndex = this.categoryIndexInit;
+    },
     data() {
       return {
         modal: false,
+        id: this.target.id,
         amount: this.target.amount,
         descr: this.target.descr,
         category_id: this.target.category_id,
+        categoryIndex: 0,
+        isLoading: false,
         modeList: [
           {
             mode: "expense",
@@ -97,6 +103,9 @@
       category() {
         return this.$store.getters["getCategoryList"](this.mode);
       },
+      categoryIndexInit() {
+        return this.category.findIndex(item => item.id == this.category_id);
+      },
       inputMode() {
         return this.modeList.find(
           item => item.mode === this.$store.state.route.name
@@ -107,17 +116,14 @@
       }
     },
     methods: {
-      categoryHandler(id) {
-        this.category_id = id;
-      },
       async editHandler() {
         if (!this.amount) return;
-
+        this.isLoading = true;
         let obj = {
-          id: this.target.id,
+          id: this.id,
           amount: this.amount,
           descr: this.descr,
-          category_id: this.category_id
+          category_id: this.category[this.categoryIndex].id
         };
         if (this.mode === "expense") {
           await this.$store.dispatch("UPDATE_EXPENSE", obj);
@@ -125,6 +131,7 @@
         if (this.mode === "income") {
           await this.$store.dispatch("UPDATE_INCOME", obj);
         }
+        this.isLoading = false;
         this.$emit("closeHandler");
       },
       closeHandler() {
@@ -137,6 +144,9 @@
         this.amount = newVal.amount;
         this.descr = newVal.descr;
         this.category_id = newVal.category_id;
+      },
+      categoryIndexInit: function(newVal) {
+        this.categoryIndex = newVal;
       }
     }
   };

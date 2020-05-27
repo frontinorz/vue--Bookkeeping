@@ -5,11 +5,11 @@
         <v-card class="mb-3">
           <v-row class="px-2 justify-space-between">
             <v-col
-              class="d-flex align-baseline"
+              class="d-flex align-baseline pb-0"
               cols="12"
               md="6"
             >
-              <div class="blue--text px-2 py-1 text-capitalize font-weight-medium">選擇年份</div>
+              <div class="cyan--text px-2 py-1 text-capitalize font-weight-medium">選擇年份</div>
               <div class="ml-2">
                 <v-autocomplete
                   :items="allYears"
@@ -18,7 +18,7 @@
               </div>
             </v-col>
             <v-col
-              class="d-flex justify-md-end"
+              class="d-flex justify-end"
               cols="12"
               md="6"
             >
@@ -29,7 +29,7 @@
                 <v-card-title
                   class="py-0 justify-end"
                   :class="titleFontSize"
-                >年度支出</v-card-title>
+                ><span class="font-custom">年度支出</span></v-card-title>
                 <v-card-text
                   class="pb-0"
                   :class="titleFontSize"
@@ -42,7 +42,7 @@
                 <v-card-title
                   class="py-0 justify-end"
                   :class="titleFontSize"
-                >年度收入</v-card-title>
+                ><span class="font-custom">年度收入</span></v-card-title>
                 <v-card-text
                   class="pb-0"
                   :class="titleFontSize"
@@ -55,7 +55,7 @@
                 <v-card-title
                   class="py-0 justify-end"
                   :class="titleFontSize"
-                >年度收支</v-card-title>
+                ><span class="font-custom">年度收支</span></v-card-title>
                 <v-card-text
                   class="title pb-0"
                   :class="titleFontSize"

@@ -1,8 +1,6 @@
 {
   "settings": {
-    "TrackerID": "TW25742909",
-    "budgetAmount": 15000,
-    "isFirstLaunch": false
+    "budgetAmount": 15000
   },
   "expenseTable": [
     {
@@ -124,6 +122,14 @@
       "date": "2020-05-19",
       "isSpecial": false,
       "id": 17
+    },
+    {
+      "amount": 50,
+      "descr": "",
+      "category_id": 1,
+      "date": "2020-05-22",
+      "isSpecial": false,
+      "id": 18
     }
   ],
   "incomeTable": [

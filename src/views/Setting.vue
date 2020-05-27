@@ -16,10 +16,10 @@
               type="number"
               v-model.number="budget"
               :rules="amountRule"
-              validate-on-blur="true"
+              validate-on-blur
             />
             <v-btn
-              color="primary"
+              color="cyan darken-1 white--text"
               class="ml-2"
               @click="updateBudget"
             >
@@ -32,7 +32,7 @@
       <v-card-title>
         <span>支出分類</span>
         <v-btn
-          color="primary"
+          color="cyan darken-1"
           class="ml-2"
           :elevation="1"
           fab
@@ -78,7 +78,7 @@
       <v-card-title>
         <span>收入分類</span>
         <v-btn
-          color="primary"
+          color="cyan darken-1"
           class="ml-2"
           :elevation="1"
           fab
@@ -127,7 +127,7 @@
     >
       <v-form v-model="validCategory">
         <v-card>
-          <v-card-title class="blue darken-2 white--text">{{ dialogTitle }}</v-card-title>
+          <v-card-title class="cyan darken-1 white--text">{{ dialogTitle }}</v-card-title>
           <v-card-text>
             <v-row>
               <v-col cols="12">
@@ -136,7 +136,7 @@
                   label="分類名稱"
                   v-model="cateName"
                   :rules="titleRule"
-                  validate-on-blur="true"
+                  validate-on-blur
                 />
               </v-col>
               <v-col cols="12">
@@ -144,7 +144,7 @@
                 <v-sheet>
                   <v-chip-group
                     mandatory
-                    active-class="blue accent-4 white--text"
+                    active-class="cyan darken-1 white--text"
                     :mobile-break-point="576"
                     column
                     v-model="cateIcon"
@@ -240,9 +240,7 @@
         titleRule: [value => !!value || "此為必須欄位"]
       };
     },
-    mounted() {
-      this.$store.dispatch("GET_ICON");
-    },
+    mounted() {},
     computed: {
       expenseCategory() {
         return this.$store.getters["getCategoryList"]("expense");

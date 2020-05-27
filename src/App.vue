@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-if="isLogin"
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
@@ -73,28 +74,49 @@
       color="cyan darken-1"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon
+        v-show="isLogin"
+        @click.stop="drawer = !drawer"
+      />
       <v-toolbar-title
         style="width: 300px"
         class="ml-0 pl-4"
       >
-        <span class="hidden-sm-and-down">Vue 記帳</span>
+        <span>Vue 記帳</span>
       </v-toolbar-title>
       <v-spacer />
-      <v-btn
-        icon
-        large
-      >
-        <v-avatar
-          size="32px"
-          item
+      <v-menu offset-y>
+        <template
+          v-slot:activator="{ on }"
+          class="ml-4"
         >
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-            alt="Vuetify"
-          />
-        </v-avatar>
-      </v-btn>
+          <v-btn
+            icon
+            large
+            v-on="on"
+            v-show="isLogin"
+          >
+            <v-avatar
+              size="32px"
+              item
+            >
+              <v-icon>mdi-account</v-icon>
+            </v-avatar>
+          </v-btn>
+        </template>
+        <v-list dense>
+          <v-list-item @click="logoutHandler">
+            <v-list-item-icon class="mr-3">
+              <v-icon>mdi-logout-variant</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>
+                登出
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-content>
       <router-view></router-view>
@@ -103,31 +125,48 @@
 </template>
 
 <script>
+  import firebase from "firebase";
   export default {
     props: {
       source: String
     },
     data: () => ({
       dialog: false,
-      drawer: null,
+      drawer: true,
       item: 0
     }),
+    created() {
+      this.$store.commit("checkIsLogin");
+      if (firebase.auth().currentUser) {
+        this.$store.dispatch("GET_DATA");
+      }
+    },
     mounted() {
-      this.$store.dispatch("GET_DATA");
       this.setToday;
+    },
+    computed: {
+      isLogin() {
+        return this.$store.getters["getLogin"];
+      }
     },
     methods: {
       setToday() {
         this.$store.commit("setDate", new Date().toISOString().substr(0, 10));
+      },
+      logoutHandler() {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            this.$router.push("/login");
+            this.$store.commit("checkIsLogin");
+          });
       }
     }
   };
 </script>
 
 <style lang="scss">
-  #app {
-    font-family: "Roboto", sans-serif, "微軟正黑體";
-  }
   a {
     text-decoration: none;
   }

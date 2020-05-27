@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import firebase from 'firebase'
+import { db, docId } from "@/db";
 
-const url = 'http://localhost:3000'
+const dbRef = db.collection("db").doc(docId);
+const expenseRef = dbRef.collection("expenseTable")
+const incomeRef = dbRef.collection("incomeTable")
+const expenseCategoryRef = dbRef.collection("expenseCategory")
+const incomeCategoryRef = dbRef.collection("incomeCategory")
 
 Vue.use(Vuex)
 
@@ -10,13 +15,43 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     currentDate: new Date().toISOString().substr(0, 10),
-    currentTable: {},
     budget: 15000,
-    iconBank: [],
     categoryExpense: [],
     categoryIncome: [],
     expenseTable: [],
-    incomeTable: []
+    incomeTable: [],
+    iconBank: [
+      "mdi-star",
+      "mdi-controller-classic",
+      "mdi-movie",
+      "mdi-party-popper",
+      "mdi-pharmacy",
+      "mdi-shopping",
+      "mdi-phone-classic",
+      "mdi-school",
+      "mdi-home",
+      "mdi-car",
+      "mdi-subway-variant",
+      "mdi-airplane",
+      "mdi-hiking",
+      "mdi-tshirt-crew",
+      "mdi-coffee",
+      "mdi-glass-mug-variant",
+      "mdi-pasta",
+      "mdi-noodles",
+      "mdi-food",
+      "mdi-baguette",
+      "mdi-cat",
+      "mdi-dog",
+      "mdi-weight-lifter",
+      "mdi-chart-bar",
+      "mdi-sack",
+      "mdi-briefcase",
+      "mdi-card-bulleted",
+      "mdi-cash-usd"
+    ],
+
+    isLogin: false
   },
   getters: {
     getCategoryList: (state) => (genre) => {
@@ -101,6 +136,9 @@ export default new Vuex.Store({
     },
     getIcons(state) {
       return state.iconBank
+    },
+    getLogin(state) {
+      return state.isLogin
     }
   },
   mutations: {
@@ -124,6 +162,9 @@ export default new Vuex.Store({
     },
 
     // Expense handler
+    addExpense(state, item) {
+      state.expenseTable.push(item)
+    },
     setExpense(state, table) {
       state.expenseTable = table
     },
@@ -140,6 +181,9 @@ export default new Vuex.Store({
     },
 
     // Income handler
+    addIncome(state, item) {
+      state.incomeTable.push(item)
+    },
     setIncome(state, table) {
       state.incomeTable = table
     },
@@ -172,175 +216,266 @@ export default new Vuex.Store({
     },
     setIncomeCategory(state, data) {
       state.categoryIncome = data
+    },
+
+    // Account Handler
+    checkIsLogin(state) {
+      state.isLogin = firebase.auth().currentUser ? true : false
     }
 
   },
   actions: {
-    GET_DATA({ commit }) {
-      axios.get(url + '/db').then((res) => {
-        commit('setData', res.data)
-      });
+    async GET_DATA(context) {
+      await context.dispatch('GET_BUDGET')
+      await context.dispatch('GET_INCOME_CATEGORY')
+      await context.dispatch('GET_EXPENSE_CATEGORY')
+      context.dispatch('GET_EXPENSE')
+      context.dispatch('GET_INCOME')
     },
 
     // Expense handler
     GET_EXPENSE({ commit }) {
-      axios.get(url + '/expenseTable').then((res) => {
-        commit('setExpense', res.data)
-      })
+      let arr = []
+      expenseRef.orderBy("date").get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            let item = doc.data();
+            item.id = doc.id
+            arr.push(item)
+          });
+          commit('setExpense', arr)
+        });
     },
     CREATE_EXPENSE(context, item) {
-      axios.post(url + '/expenseTable', item).then(() => {
-        context.dispatch('GET_EXPENSE')
-      });
+      const newItem = expenseRef.doc()
+      newItem.set({
+        amount: item.amount,
+        descr: item.descr,
+        category_id: item.category_id,
+        date: item.date,
+        isSpecial: item.isSpecial
+      }).then(() => {
+        let localItem = item
+        localItem.id = newItem.id
+        context.commit('addExpense', localItem)
+      })
     },
     UPDATE_EXPENSE(context, item) {
-      axios.patch(url + '/expenseTable/' + item.id, {
+      expenseRef.doc(item.id).update({
         amount: item.amount,
         descr: item.descr,
         category_id: item.category_id
       }).then(() => {
         context.commit('updateExpense', item)
       });
+
     },
     DELETE_EXPENSE(context, item) {
-      let index = context.state.expenseTable.indexOf(item)
+      const index = context.state.expenseTable.indexOf(item)
       if (index == -1) return false
-      axios.delete(url + '/expenseTable/' + item.id).then(() => {
-        context.commit('deleteExpense', index)
-      });
+      expenseRef
+        .doc(item.id)
+        .delete().then(() => {
+          context.commit('deleteExpense', index)
+        })
     },
 
     // Income handler
     GET_INCOME({ commit }) {
-      axios.get(url + '/incomeTable').then((res) => {
-        commit('setIncome', res.data)
-      });
+      let arr = []
+      incomeRef.orderBy("date").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          let item = doc.data()
+          item.id = doc.id
+          arr.push(item)
+        });
+        commit('setIncome', arr)
+      })
     },
     CREATE_INCOME(context, item) {
-      axios.post(url + '/incomeTable', item).then(() => {
-        context.dispatch('GET_INCOME')
-      });
-    },
-    UPDATE_INCOME(context, item) {
-      axios.patch(url + '/incomeTable/' + item.id, {
+      const newItem = incomeRef.doc()
+      newItem.set({
         amount: item.amount,
         descr: item.descr,
-        category_id: item.category_id
+        category_id: item.category_id,
+        date: item.date
       }).then(() => {
-        context.commit('updateIncome', item)
-      });
+        let localItem = item
+        localItem.id = newItem.id
+        context.commit('addIncome', localItem)
+      })
+    },
+    UPDATE_INCOME(context, item) {
+      incomeRef.doc(item.id)
+        .update({
+          amount: item.amount,
+          descr: item.descr,
+          category_id: item.category_id
+        }).then(() => {
+          context.commit('updateIncome', item)
+        })
     },
     DELETE_INCOME(context, item) {
       let index = context.state.incomeTable.indexOf(item)
       if (index == -1) return false
-      axios.delete(url + '/incomeTable/' + item.id).then(() => {
-        context.commit('deleteIncome', index)
-      });
+      incomeRef
+        .doc(item.id)
+        .delete().then(() => {
+          context.commit('deleteIncome', index)
+        })
     },
 
     // Budget Handler
     GET_BUDGET({ commit }) {
-      axios.get(url + '/settings').then((res) => {
-        commit('setBudget', res.data.budgetAmount)
+      dbRef.get().then((doc) => {
+        if (doc.exists) {
+          commit('setBudget', doc.data().settings.budgetAmount)
+        }
       })
     },
     UPDATE_BUDGET(context, amount) {
-      axios.patch(url + '/settings', {
-        budgetAmount: amount
-      }).then(() => {
+      dbRef.update(
+        {
+          "settings.budgetAmount": amount
+        }
+      ).then(() => {
         context.commit('setBudget', amount)
       })
     },
 
-    // Category handler
-    GET_ICON({ commit }) {
-      axios.get(url + '/iconBank').then((res) => {
-        commit('setIconBank', res.data)
-      })
-    },
     // - Expense Category
     GET_EXPENSE_CATEGORY({ commit }) {
-      axios.get(url + '/expenseCategory').then((res) => {
-        commit('setExpenseCategory', res.data)
+      let arr = []
+      expenseCategoryRef.orderBy("order").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          if (doc.data().order == 0) {
+            arr.unshift(doc.data())
+          } else {
+            arr.push(doc.data())
+          }
+        });
+        commit('setExpenseCategory', arr)
       })
     },
     CREATE_EXPENSE_CATEGORY(context, item) {
-      axios.post(url + '/expenseCategory', item).then(() => {
-        context.dispatch('GET_EXPENSE_CATEGORY')
-      });
+      const newCategory = expenseCategoryRef.doc();
+      const allCategory = context.state.categoryExpense
+      const lastOrder = allCategory[allCategory.length - 1].order + 1
+      newCategory.set({
+        title: item.title,
+        icon: item.icon,
+        id: newCategory.id,
+        order: lastOrder
+      })
+        .then(function () {
+          context.dispatch('GET_EXPENSE_CATEGORY')
+        })
     },
     UPDATE_EXPENSE_CATEGORY(context, item) {
-      axios.patch(url + '/expenseCategory/' + item.id, {
-        name: item.name,
-        icon: item.icon
-      }).then(() => {
-        context.dispatch('GET_EXPENSE_CATEGORY')
-      });
+      expenseCategoryRef.doc(item.id)
+        .update({
+          title: item.title,
+          icon: item.icon
+        }).then(() => {
+          context.dispatch('GET_EXPENSE_CATEGORY')
+        });
     },
     DELETE_EXPENSE_CATEGORY(context, id) {
-      axios.delete(url + '/expenseCategory/' + id).then(() => {
-        context.dispatch('GET_EXPENSE_CATEGORY')
-        // 抓出所有應用此分類 id 的物件
-        let expenseSelected = context.state.expenseTable
-          .filter(item => item.category_id == id)
-        if (expenseSelected.length == 0) return
+      expenseCategoryRef
+        .doc(id)
+        .delete().then(function () {
+          context.dispatch('GET_EXPENSE_CATEGORY')
 
-        // 取出 id
-        let expenseSelectedId = expenseSelected.map(item => item.id)
+          // 抓出所有應用此分類 id 的物件
+          let itemSelect = context.state.expenseTable
+            .filter(item => item.category_id == id)
+          if (itemSelect.length == 0) return
 
-        // 一次送出全部的修改
-        axios.all(expenseSelectedId.map(id => {
-          axios.patch(url + '/expenseTable/' + id, {
-            category_id: 0
+          // 取出 id
+          let itemSelectId = itemSelect.map(item => item.id)
+
+          // 建立批次送出全部的修改
+          const batch = db.batch();
+
+          itemSelectId.map(id => {
+            const item = expenseRef.doc(id)
+            batch.update(item, { category_id: "0" });
           })
-        }))
-          .then(() => {
-            context.commit('deleteCategory', expenseSelected)
-          });
-      });
+
+          batch.commit().then(function () {
+            context.commit('deleteCategory', itemSelect)
+          })
+
+        })
     },
+
     // - Income Category
     GET_INCOME_CATEGORY({ commit }) {
-      axios.get(url + '/incomeCategory').then((res) => {
-        commit('setIncomeCategory', res.data)
+      let arr = []
+      incomeCategoryRef.orderBy("order").get().then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          if (doc.data().order == 0) {
+            arr.unshift(doc.data())
+          } else {
+            arr.push(doc.data())
+          }
+        });
+        commit('setIncomeCategory', arr)
       })
     },
     CREATE_INCOME_CATEGORY(context, item) {
-      axios.post(url + '/incomeCategory', item).then(() => {
-        context.dispatch('GET_INCOME_CATEGORY')
-      });
+      const newCategory = incomeCategoryRef.doc();
+      const allCategory = context.state.categoryIncome
+      const lastOrder = allCategory[allCategory.length - 1].order + 1
+      newCategory.set({
+        title: item.title,
+        icon: item.icon,
+        id: newCategory.id,
+        order: lastOrder
+      })
+        .then(function () {
+          context.dispatch('GET_INCOME_CATEGORY')
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
     },
     UPDATE_INCOME_CATEGORY(context, item) {
-      axios.patch(url + '/incomeCategory/' + item.id, {
-        name: item.name,
-        icon: item.icon
-      }).then(() => {
-        context.dispatch('GET_INCOME_CATEGORY')
-      });
+      incomeCategoryRef.doc(item.id)
+        .update({
+          title: item.title,
+          icon: item.icon
+        }).then(() => {
+          context.dispatch('GET_INCOME_CATEGORY')
+        });
     },
     DELETE_INCOME_CATEGORY(context, id) {
-      axios.delete(url + '/incomeCategory/' + id).then(() => {
-        context.dispatch('GET_INCOME_CATEGORY')
-        // 抓出所有應用此分類 id 的物件
-        let incomeSelected = context.state.incomeTable
-          .filter(item => item.category_id == id)
-        if (incomeSelected.length == 0) return
+      incomeCategoryRef
+        .doc(id)
+        .delete().then(function () {
+          context.dispatch('GET_INCOME_CATEGORY')
 
-        // 取出 id
-        let incomeSelectedId = incomeSelected.map(item => item.id)
+          // 抓出所有應用此分類 id 的物件
+          let itemSelect = context.state.incomeTable
+            .filter(item => item.category_id == id)
+          if (itemSelect.length == 0) return
 
-        // 一次送出全部的修改
-        axios.all(incomeSelectedId.map(id => {
-          axios.patch(url + '/incomeTable/' + id, {
-            category_id: 0
+          // 取出 id
+          let itemSelectId = itemSelect.map(item => item.id)
+
+          // 建立批次送出全部的修改
+          const batch = db.batch();
+
+          itemSelectId.map(id => {
+            const item = incomeRef.doc(id)
+            batch.update(item, { category_id: "0" });
           })
-        }))
-          .then(() => {
-            context.commit('deleteCategory', incomeSelected)
-          });
-      });
-    },
 
+          batch.commit().then(function () {
+            context.commit('deleteCategory', itemSelect)
+          })
+        })
+    }
   },
   modules: {
   }

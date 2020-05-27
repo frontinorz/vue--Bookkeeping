@@ -55,7 +55,7 @@
             <v-card-title
               class="pb-0 pt-1 justify-end"
               :class="titleFontSize"
-            >預算餘額</v-card-title>
+            ><span class="font-custom">預算餘額</span></v-card-title>
             <v-card-text
               class="pb-0"
               :class="titleFontSize"
@@ -73,7 +73,7 @@
             <v-card-title
               class="pb-0 pt-1 justify-end"
               :class="titleFontSize"
-            >當月支出</v-card-title>
+            ><span class="font-custom">當月支出</span></v-card-title>
             <v-card-text
               class="pb-0"
               :class="titleFontSize"
@@ -90,7 +90,24 @@
             <v-card-title
               class="pb-0 pt-1 justify-end"
               :class="titleFontSize"
-            >當月收入</v-card-title>
+            ><span class="font-custom">當月特支</span></v-card-title>
+            <v-card-text
+              class="pb-0"
+              :class="titleFontSize"
+            >
+              <span class="pr-1">
+                {{ numberFormat(monthSpecialExpense) }}
+              </span>
+            </v-card-text>
+          </v-card>
+          <v-card
+            :elevation=0
+            class="px-2"
+          >
+            <v-card-title
+              class="pb-0 pt-1 justify-end"
+              :class="titleFontSize"
+            ><span class="font-custom">當月收入</span></v-card-title>
             <v-card-text
               class="pb-0"
               :class="titleFontSize"
@@ -129,13 +146,15 @@
         v-if="expenseChartData.length"
       >
         <v-card style="min-height:200px;height:100%">
-          <v-card-title class="font-weight-bold pb-0 pl-6">
-            支出分類
-          </v-card-title>
-          <HorizontalBarChart
-            style="min-height:300px;"
-            :seriesData="expenseChartData"
-          />
+          <v-card-text class="pa-0">
+            <v-card-title class="pb-0 pl-6 font-weight-bold">
+              支出分類
+            </v-card-title>
+            <HorizontalBarChart
+              style="min-height:300px;"
+              :seriesData="expenseChartData"
+            />
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col
@@ -144,13 +163,15 @@
         v-if="incomeChartData.length"
       >
         <v-card style="min-height:200px;height:100%">
-          <v-card-title class="font-weight-bold pb-0 pl-6">
-            收入分類
-          </v-card-title>
-          <HorizontalBarChart
-            style="min-height:300px;"
-            :seriesData="incomeChartData"
-          />
+          <v-card-text class="pa-0">
+            <v-card-title class="pb-0 pl-6 font-weight-bold">
+              收入分類
+            </v-card-title>
+            <HorizontalBarChart
+              style="min-height:300px;"
+              :seriesData="incomeChartData"
+            />
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -353,11 +374,16 @@
       },
       getDataByCategory(table, category) {
         let tableCate = table.reduce((obj, item) => {
-          let cate = category.find(el => el.id == item.category_id).title;
-          if (!obj[cate]) {
-            obj[cate] = 0;
+          let cate = category.find(el => {
+            return el.id == item.category_id;
+          });
+          // console.log("itemAmount :" + item.amount);
+          // console.log("itemCate :" + cate.title);
+          // console.log("----------------");
+          if (!obj[cate.title]) {
+            obj[cate.title] = 0;
           }
-          obj[cate] += item.amount;
+          obj[cate.title] += item.amount;
           return obj;
         }, {});
 
@@ -376,7 +402,6 @@
     }
   };
 </script>
-
 <style lang="scss">
   .v-calendar {
     .v-event {
@@ -389,5 +414,11 @@
   }
   .v-calendar.v-calendar-events .v-calendar-weekly__day {
     min-height: 80px;
+  }
+  .font-custom {
+    font-family: "Roboto", sans-serif, "微軟正黑體" !important;
+    @media screen and (max-width: 600px) {
+      font-size: 14px;
+    }
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <v-card>
-    <v-card-title class="px-4 py-4 font-weight-bold">
-      <span class="">{{ inputMode.title }}</span>
+  <v-card :loading="isLoading">
+    <v-card-title class="px-4 py-4">
+      {{ inputMode.title }}
     </v-card-title>
     <v-divider></v-divider>
     <v-container>
@@ -9,8 +9,9 @@
         <v-chip-group
           mandatory
           active-class="cyan darken-1 white--text"
-          column
-          v-model=category_id
+          v-model="categoryIndex"
+          v-resize="chipRwd"
+          :column="isChipColumn"
         >
           <v-chip
             class="mr-2"
@@ -30,7 +31,7 @@
           placeholder="0"
           v-model.number="amount"
           :rules="amountRule"
-          validate-on-blur="true"
+          validate-on-blur
           dense
         />
       </v-col>
@@ -82,10 +83,12 @@
       return {
         amount: null,
         descr: "",
-        category_id: 0,
+        categoryIndex: 0,
         isSpecial: false,
         modal: false,
         isLoading: false,
+        windowX: null,
+        isChipColumn: true,
         modeList: [
           {
             mode: "expense",
@@ -108,6 +111,9 @@
       category() {
         return this.$store.getters["getCategoryList"](this.mode);
       },
+      category_id() {
+        return this.category[this.categoryIndex].id;
+      },
       inputMode() {
         return this.modeList.find(
           item => item.mode === this.$store.state.route.name
@@ -118,18 +124,14 @@
       }
     },
     methods: {
-      categoryHandler(id) {
-        this.category_id = id;
-      },
       clearInput() {
-        this.category_id = 0;
+        this.categoryIndex = 0;
         this.amount = null;
         this.descr = "";
         this.isSpecial = false;
       },
       async addHandler() {
         if (!this.amount) return;
-
         let obj = {
           amount: this.amount,
           descr: this.descr,
@@ -147,6 +149,10 @@
         }
         this.isLoading = false;
         this.clearInput();
+      },
+      chipRwd() {
+        this.windowX = window.innerWidth;
+        if (this.windowX < 600) this.isChipColumn = false;
       }
     }
   };

@@ -57,13 +57,12 @@
             formatter: "{a} <br/>{b} : {c} ({d}%)"
           },
           legend: {
-            type: "scroll",
+            // type: "scroll",
             orient: "vertical",
             right: 10,
             top: 20,
             bottom: 20,
             data: this.seriesData.map(item => item.name)
-            // selected: data.selected
           },
           series: [
             {
