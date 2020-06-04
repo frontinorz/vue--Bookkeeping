@@ -13,7 +13,8 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 
-import firebase from 'firebase'
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import "@/db";
 
 sync(store, router)
@@ -22,7 +23,6 @@ Vue.config.productionTip = false
 
 let app
 firebase.auth().onAuthStateChanged(() => {
-  console.log("change")
   if (!app) {
     app = new Vue({
       router,

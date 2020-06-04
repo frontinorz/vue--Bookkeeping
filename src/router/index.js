@@ -7,7 +7,8 @@ import Calender from '@/views/Calender'
 import State from '@/views/State'
 import Setting from '@/views/Setting'
 
-import firebase from 'firebase'
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 Vue.use(VueRouter)
 
@@ -86,8 +87,6 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Check if NO logged user
     if (!firebase.auth().currentUser) {
-      // Go to login
-      console.log("處理轉址" + firebase.auth().currentUser)
       next({
         path: '/login',
         query: {
@@ -101,8 +100,6 @@ router.beforeEach((to, from, next) => {
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     // Check if NO logged user
     if (firebase.auth().currentUser) {
-      // Go to login
-      console.log("訪客處理轉址" + firebase.auth().currentUser)
       next({
         path: '/login',
         query: {

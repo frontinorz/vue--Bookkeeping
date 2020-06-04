@@ -51,7 +51,8 @@
 </template>
 
 <script>
-  import firebase from "firebase";
+  import firebase from "firebase/app";
+  import "firebase/auth";
 
   export default {
     data: () => ({
@@ -91,7 +92,7 @@
           case "auth/user-not-found":
             return "不存在此使用者";
           default:
-            console.log(err.code);
+            alert(err.code);
             return err.message;
         }
       }

@@ -254,7 +254,6 @@
     },
     methods: {
       updateBudget() {
-        console.log(this.validBudget);
         if (!this.validBudget) return;
         this.$store.dispatch("UPDATE_BUDGET", this.budget);
       },

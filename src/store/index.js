@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import firebase from 'firebase'
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 import { db, docId } from "@/db";
 
 const dbRef = db.collection("db").doc(docId);
@@ -436,9 +438,6 @@ export default new Vuex.Store({
         .then(function () {
           context.dispatch('GET_INCOME_CATEGORY')
         })
-        .catch(function (error) {
-          console.error("Error adding document: ", error);
-        });
     },
     UPDATE_INCOME_CATEGORY(context, item) {
       incomeCategoryRef.doc(item.id)

@@ -4,6 +4,7 @@
       v-if="isLogin"
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
+      :width="220"
       app
     >
       <v-list>
@@ -125,7 +126,8 @@
 </template>
 
 <script>
-  import firebase from "firebase";
+  import firebase from "firebase/app";
+  import "firebase/auth";
   export default {
     props: {
       source: String

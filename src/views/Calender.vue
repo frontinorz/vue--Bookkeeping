@@ -5,7 +5,7 @@
         <v-col
           class="py-0"
           cols="12"
-          md="6"
+          md="4"
         >
           <v-sheet height="64">
             <v-toolbar
@@ -46,7 +46,7 @@
         <v-col
           class="py-0 d-flex text-right justify-end"
           cols="12"
-          md="6"
+          md="8"
         >
           <v-card
             :elevation=0
@@ -359,7 +359,6 @@
       updateRange({ start, end }) {
         this.start = start;
         this.end = end;
-        // console.log(start);
         this.$store.commit("setDate", start.date);
       },
       fundLink({ nativeEvent, event }) {
@@ -377,9 +376,6 @@
           let cate = category.find(el => {
             return el.id == item.category_id;
           });
-          // console.log("itemAmount :" + item.amount);
-          // console.log("itemCate :" + cate.title);
-          // console.log("----------------");
           if (!obj[cate.title]) {
             obj[cate.title] = 0;
           }
